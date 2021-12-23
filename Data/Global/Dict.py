@@ -1,0 +1,19 @@
+ListAdmin = [
+    247756105558523904, #Kahinh
+    319109133271957505, #Seven
+    593128975228993560 #Heathcliff
+]
+
+ListUrskaBot = [
+    701147779199926373, #Prod
+    826824696590368818 #Dev
+]
+
+ListUrskiBot = [
+    923531479819112499, #Prod
+    923531280149250128 #Dev
+]
+
+Timer = 600
+
+channel_BuildAnalysis = 921059437664428102

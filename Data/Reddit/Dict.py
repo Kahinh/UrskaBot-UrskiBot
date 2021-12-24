@@ -23,7 +23,7 @@ PHXL_Feeds = {
     'http://www.reddit.com/user/slayerdk-PHX/.rss' : ""
     }
 
-Reddit_Channels = [ \
+UrskaBot_redditchannels = [ \
     815634847657754624, #UrskaBot Server
     817073559007526983, #Cpt Maelstrom
     878390230376415252, #MrTrails
@@ -31,10 +31,9 @@ Reddit_Channels = [ \
     917014765916815360, #DoriBallz
     ]
 
-# Reddit_Channels = [ \
-#     815634847657754624
-#     ]
+#TOCHANGEBEFORELIVE
+UrskaBot_redditchannels = [ \
+    
+    ]
 
-if __name__ == "__main__":
-    for feed in PHXL_Feeds:
-        print(feed)
+UrskiBot_redditchannels = []

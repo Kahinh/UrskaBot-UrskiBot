@@ -16,5 +16,6 @@ ListUrskiBot = [
 
 Timer = 600
 
+#TOCHANGEBEFORELIVE
 channel_BuildAnalysis = 921059437664428102
 channel_AdminReddit = 816351837296918528

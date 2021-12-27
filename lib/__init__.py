@@ -41,8 +41,8 @@ from hashids import Hashids
 hashids = Hashids(salt='spicy')
 
 #Localisation
-from Traduction.Tools import _
-import Traduction.Trads as Trads
+from Localisation.Tools import _
+import Localisation.Trads as Trads
 
 #A check
 from asyncio import DefaultEventLoopPolicy

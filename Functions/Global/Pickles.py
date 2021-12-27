@@ -1,13 +1,16 @@
 import lib
 
-def LoadPickle(FileName):
+def LoadPickle(FileName, mode="Liste"):
     try:
         with open(FileName, 'rb') as picklefile:
             data = lib.pickle.load(picklefile)
             picklefile.close()
     except:
-        data = []
-    
+        if mode == "Liste":
+            data = []
+        elif mode =="Dict":
+            data = {}
+
     return data
 
 def DumpPickle(FileName, data):

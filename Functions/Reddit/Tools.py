@@ -25,16 +25,9 @@ def get_FluxReddit(PHXL_Feeds):
             FluxReddit[feed] = {}
     return FluxReddit
 
-if __name__ == "__main__":
-    PHXL_Feeds = [ \
-        'http://www.reddit.com/user/CreatureTech-PHX/.rss', \
-        ]
-    FluxReddit = get_FluxReddit(PHXL_Feeds)
-    print(FluxReddit)
-
 #Fonction post sur Discord
-async def EmbedDiscord(self, label, feedtitle, content, thumbnail, feed_url, time):
-    for channel_id in lib.RedditDict.UrskaBot_redditchannels:
+async def EmbedDiscord(self, label, feedtitle, content, thumbnail, feed_url, time, redditchannels):
+    for channel_id in redditchannels:
         try:
             channel = self.bot.get_channel(channel_id)
             if label == "r/dauntless":
@@ -52,3 +45,47 @@ async def EmbedDiscord(self, label, feedtitle, content, thumbnail, feed_url, tim
                 await channel.send(embed=embed)
         except:
             pass
+
+async def launch_tracker(self, channeladmin, PastFeed, redditchannels):
+    await lib.Tools.send_messages(channeladmin, "Initialisation de la récupération des flux RSS Reddit.")
+
+    #First step, on récupère les flux Reddit.
+    FluxReddits = get_FluxReddit(lib.RedditDict.PHXL_Feeds)
+
+    #Second step, on check si c'est déjà dans le oldFeed
+    for feed in lib.RedditDict.PHXL_Feeds:
+
+        #On vérifie quand même que ce qu'on remonte est cohérent
+        if FluxReddits[feed] != {}:
+
+            #Si jamais c'est la première fois qu'on voit le bonhomme
+            if feed not in PastFeed:
+                PastFeed[feed] = []
+
+            #On get le content
+            for entry in reversed(FluxReddits[feed].entries):
+                id = entry['id']
+
+                #Si le message a pas encore été posté
+                if id not in PastFeed[feed]:
+                    PastFeed[feed].append(id)
+                    if len(PastFeed[feed]) > 100:
+                        PastFeed[feed].pop(0)
+
+                    #On get le contenu
+                    media_thumbnail, soupContent = get_Soup_and_Thumbnail(entry)
+
+                    #Si le media_thumbnail est vide, on essaie de foutre l'icone de l'user.
+                    if media_thumbnail == "":
+                        if feed in lib.RedditDict.PHXL_Feeds:
+                            media_thumbnail = lib.RedditDict.PHXL_Feeds[feed]
+
+                    #On fait appel à la fonction pour publier le post.
+                    await EmbedDiscord(self, entry.tags[0].label, entry.title, soupContent, media_thumbnail, entry.link, entry.updated, redditchannels)
+
+    #Pour finir, on sauvegarde dans le pickle
+    lib.Pickles.DumpPickle(lib.GlobalFiles.file_Reddit, PastFeed)
+
+    await lib.Tools.send_messages(channeladmin, "Flux RSS Reddit récupérés.")
+
+    return PastFeed

@@ -40,6 +40,9 @@ import Data.Reddit.Dict as RedditDict
 from hashids import Hashids
 hashids = Hashids(salt='spicy')
 
+#Localisation
+from Traduction.Tools import _
+import Traduction.Trads as Trads
 
 #A check
 from asyncio import DefaultEventLoopPolicy

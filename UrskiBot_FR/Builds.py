@@ -6,6 +6,7 @@ FileName = lib.GlobalFiles.file_BuildList
 class BuildList(lib.discord.ext.commands.Cog):
     def __init__(self, bot):
         self.bot = bot
+        self.__lang__ = "FR"
         self.__buildlist__ = lib.Pickles.LoadPickle(FileName)
         self.__names_json__ = lib.Builder_JSON.get_names_json("FR")
         self.__data_json__ = lib.Builder_JSON.get_data_json("FR")
@@ -78,7 +79,7 @@ class BuildList(lib.discord.ext.commands.Cog):
     async def on_message(self, message):
         if message.content.startswith("//updatebuilds") and (message.author.id in lib.GlobalDict.ListAdmin or message.author.id in lib.GlobalDict.ListUrskaBot):
             await BuildList.updatebuilds(self)
-            await lib.Tools.send_messages(message.channel , "Données Loadées")
+            await lib.Tools.send_messages(message.channel , lib._("DataLoaded", self.__lang__))
 
 def setup(bot):
     bot.add_cog(BuildList(bot))

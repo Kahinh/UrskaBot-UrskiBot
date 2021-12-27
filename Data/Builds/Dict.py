@@ -1,10 +1,18 @@
+import lib
+
 #Donnees MetaBuilds
 Builds_Workbook = "1Y6CnmLKtJZZFWkTmrmrSMUZEjowmft0PgrrkimJzYI8"
-Builds_Sheet = "ZBuilds"
 Builds_Range = "B5:F2000"
 Builds_start_letter = "B"
 Builds_end_letter = "E"
 Builds_start_row = 5
+
+#Données Test/Prod
+Builds_Sheet_env = {
+    'Test' : "ZBuilds",
+    'Prod' : "BBuilds"
+}
+Builds_Sheet = Builds_Sheet_env[lib.tokens.var_TestProd]
 
 #Donnes TrialBuilds
 Meta_Workbook = '1-I4LQ_8uNqV9LuybXhz2wjmcPeTNNGWRZ-kFjsckwtk'

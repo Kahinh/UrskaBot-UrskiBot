@@ -20,7 +20,9 @@ bot.remove_command('help')
 
 print('------------------------')
 startup_extensions = [
-    "UrskaBot_EN.Builds"
+    "UrskaBot_EN.Builds",
+    "UrskaBot_EN.Reddit",
+    "gitignore.RaspberryPI"
 	]
 
 @bot.event

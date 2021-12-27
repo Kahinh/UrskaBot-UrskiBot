@@ -6,6 +6,7 @@ FileName = lib.GlobalFiles.file_BuildList
 class BuildList(lib.discord.ext.commands.Cog):
     def __init__(self, bot):
         self.bot = bot
+        self.__lang__ = "EN"
         self.__buildlist__ = lib.Pickles.LoadPickle(FileName)
         self.__names_json__ = lib.Builder_JSON.get_names_json("EN")
         self.__data_json__ = lib.Builder_JSON.get_data_json("EN")
@@ -76,7 +77,7 @@ class BuildList(lib.discord.ext.commands.Cog):
             self.__names_json__ = lib.Builder_JSON.get_names_json("EN")
             self.__data_json__ = lib.Builder_JSON.get_data_json("EN")
 
-            await lib.Tools.send_messages(ctx, "Données Loadées")
+            await lib.Tools.send_messages(ctx, lib._("DataLoaded", self.__lang__))
 
     @lib.discord.ext.commands.command(name="infobuild", pass_context=True)
     async def pushbuild(self, ctx, *, lien):

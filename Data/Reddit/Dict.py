@@ -1,3 +1,5 @@
+import lib
+
 PHXL_Feeds = {
     'https://www.reddit.com/user/CreatureTech-PHX/.rss' : "https://styles.redditmedia.com/t5_24l3xq/styles/profileIcon_o0frpu7ywro31.jpg?width=256&height=256&crop=256:256,smart&s=7b4d77320f92ee6a7608d01aebf1413d06cfa697",
     'https://www.reddit.com/user/EuanReid/.rss' : "https://www.redditstatic.com/avatars/defaults/v2/avatar_default_0.png",
@@ -23,17 +25,24 @@ PHXL_Feeds = {
     'http://www.reddit.com/user/slayerdk-PHX/.rss' : ""
     }
 
-UrskaBot_redditchannels = [ \
+#Données Test/Prod
+UrskaBot_redditchannels_env = {
+    'Test' : [924236539511332926],
+    'Prod' : [ \
     815634847657754624, #UrskaBot Server
     817073559007526983, #Cpt Maelstrom
     878390230376415252, #MrTrails
     915636122913230908, #Texas-Ranger
     917014765916815360, #DoriBallz
     ]
+}
+UrskaBot_redditchannels = UrskaBot_redditchannels_env[lib.tokens.var_TestProd]
 
-#TOCHANGEBEFORELIVE
-UrskaBot_redditchannels = [ \
-    
-    ]
+UrskiBot_redditchannels_env = {
+    'Test' : [924236539511332926],
+    'Prod' : []
+}
+UrskiBot_redditchannels = UrskiBot_redditchannels_env[lib.tokens.var_TestProd]
 
-UrskiBot_redditchannels = []
+if __name__ == "__main__":
+    print(UrskaBot_redditchannels_env["Test"])

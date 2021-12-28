@@ -14,9 +14,26 @@ Builds_Sheet_env = {
 }
 Builds_Sheet = Builds_Sheet_env[lib.tokens.var_TestProd]
 
-#Donnes TrialBuilds
+#Données Test/Prod
+Trials_Sheet_env = {
+    'Test' : "ZTrials",
+    'Prod' : "BTrials"
+}
+Trials_Sheet = Trials_Sheet_env[lib.tokens.var_TestProd]
+
+#Données MetaBuilds
 Meta_Workbook = '1-I4LQ_8uNqV9LuybXhz2wjmcPeTNNGWRZ-kFjsckwtk'
 Meta_Range = "A1:Z1000"
+
+#Données TrialBuilds
+Trials_Workbook = "1Kv3nlr7y5DJB_olhATqXXh-jPCkDygNCVyHkDwllTsc"
+Trials_Range = "A1:Z1000"
+Builds_Trials_Range_Push = "B5:E2000"
+Builds_Trials_Range_Delete = "B5:D2000"
+Builds_Trials_start_letter = "B"
+Builds_Trials_end_letter = "D"
+Builds_Trials_start_row = 5
+
 
 #Dico Builds
 OmniColor = {
@@ -41,7 +58,7 @@ trad_Omni = {
 trad_Weapon = {
     'Épée' : "Sword",
     'Aéthérolance' : "Warpike",
-    'Cestes Aethériques' : "Strikers",
+    'Cestes Aethériques' : "Aether Strikers",
     'Chaînes-lames' : "Chain Blades",
     'Hache' : "Axe",
     'Répéteurs' : "Repeater",

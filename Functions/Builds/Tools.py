@@ -21,8 +21,30 @@ def get_buildsdata():
     buildlist = lib.Pickles.LoadPickle(lib.GlobalFiles.file_BuildList)
     return buildlist
 
-def get_trialdata():
-    pass
+def get_trialsheetdata():
+
+    #D'abord, on get la liste des sheets = trials
+    SheetListe = lib.GSheet.get_trialsheetlist(lib.BuildsDict.Trials_Workbook)
+
+    TrialSheetListe = {}
+    for Behemoth in SheetListe:
+
+        TrialSheetListe[Behemoth] = []
+        
+        res = lib.GSheet.getData("Meta", lib.BuildsDict.Trials_Workbook, Behemoth, lib.BuildsDict.Trials_Range)
+
+        for row in res:
+            
+            for item in row:
+
+                if "=HYPERLINK" in item or "=LIEN_HYPERTEXTE" in item:
+                    link = item.replace('=HYPERLINK("', '')
+                    link = link.replace('=LIEN_HYPERTEXTE("', '')
+                    link = link.split('"')[0]
+
+                    TrialSheetListe[Behemoth].append(link)
+
+    return TrialSheetListe
 
 def get_metasheetdata():
     MetaSheetListe = {}
@@ -63,7 +85,7 @@ def create_build_embed(lang, buildlist, names_json, data_json, count, type, weap
         try:
             Effects = lib.get_Effects.getEffects(build_link, names_json, data_json, BuildInfos)
         except: 
-            Effects = "Cannot calculate the effects."
+            Effects = lib._("CantCalculateEffects", lang)
 
         #On calcule la thumbnail
         Weapon = names_json["Weapons"][str(BuildInfos[lib.Builder_Config.weapons[BuildInfos[0]]])]
@@ -76,27 +98,31 @@ def create_build_embed(lang, buildlist, names_json, data_json, count, type, weap
             embedcolor = lib.BuildsDict.OmniColor['Standard']
         
         #description
-        description = "__Summary of your request :__\n" \
-        f"- Type : **{type}**\n" \
-        f"- Weapon : **{weapon}**\n" \
-        f"- Element : **{element}**" \
+        description = lib._("SummaryRequest", lang) \
+            + "\n" + \
+            lib._("Type", lang) + f" **{type}**" \
+            + "\n" + \
+            lib._("Weapon", lang) + f" **{weapon}**" \
+            + "\n" + \
+            lib._("Element", lang) + f" **{element}**" \
 
         #note
-        note = "All **UrskaBot** builds come from the [Official Metasheet](https://docs.google.com/spreadsheets/d/1-I4LQ_8uNqV9LuybXhz2wjmcPeTNNGWRZ-kFjsckwtk/edit#gid=0).\n" \
-        "Those builds are standard and optimized ones. If they didn't fit your needs, you can follow the link to the metasheet or make a request in a dedicated channel."
+        note = lib._("Notes_part1", lang) \
+            + "\n" + \
+            lib._("Notes_part2", lang)
 
-        embed=lib.discord.Embed(title=f"Build Request", \
+        embed=lib.discord.Embed(title=lib._("BuildTitleRequest", lang), \
         #url=f"{build_link}", \
         description=f"{description}", \
         color=embedcolor)
 
-        embed.add_field(name="__Link__", value=f"Click here -> [Dauntless-Builder.com]({build_link})", inline=False)
-        embed.add_field(name="__Cells__", value=Effects, inline=False)
-        embed.add_field(name="__Notes__", value=note, inline=False)
+        embed.add_field(name=lib._("Link", lang), value=lib._("ClickHere", lang) + f"({build_link})", inline=False)
+        embed.add_field(name=lib._("Cells", lang), value=Effects, inline=False)
+        embed.add_field(name=lib._("Notes", lang), value=note, inline=False)
         
         embed.set_thumbnail(url=f"{thumbnail}")
-        embed.set_footer(text=f"Request n° : {count}")
+        embed.set_footer(text=lib._("Request", lang) + f"{count}")
         
         count += 1
 
-    return build_link, embed, count
+        return build_link, embed, count

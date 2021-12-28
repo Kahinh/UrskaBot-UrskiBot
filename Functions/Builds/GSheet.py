@@ -37,3 +37,19 @@ def pushData(data, workbook, sheet, start_letter, end_letter, start_row):
         return "Done"
     except:
         return "Not Done"
+
+def reset_trialdata(workbook, sheet, range):
+    sh = gc.open_by_key(workbook)   
+    sh.values_clear(f"{sheet}!{range}")
+
+def get_trialsheetlist(workbook):
+    sh = gc.open_by_key(workbook)
+    worksheets_list = sh.worksheets()
+    list = []
+    for worksheet in worksheets_list:
+        if worksheet.title != "Summary":
+            list.append(worksheet.title)
+
+    
+    return list
+

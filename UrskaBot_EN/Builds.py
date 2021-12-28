@@ -2,12 +2,14 @@ import lib
 
 print("Builds : √")
 FileName = lib.GlobalFiles.file_BuildList
+FileName_Trial = lib.GlobalFiles.file_TrialList
 
 class BuildList(lib.discord.ext.commands.Cog):
     def __init__(self, bot):
         self.bot = bot
         self.__lang__ = "EN"
         self.__buildlist__ = lib.Pickles.LoadPickle(FileName)
+        self.__triallist__ = lib.Pickles.LoadPickle(FileName_Trial)
         self.__names_json__ = lib.Builder_JSON.get_names_json("EN")
         self.__data_json__ = lib.Builder_JSON.get_data_json("EN")
         self.__count__ = 1
@@ -65,7 +67,7 @@ class BuildList(lib.discord.ext.commands.Cog):
         if build_link != "":
             await lib.Tools.send_messages(ctx, embed, "embed")
         else:
-            await lib.Tools.send_messages(ctx, "Je n'ai pas trouvé de builds convenant à votre requête.")
+            await lib.Tools.send_messages(ctx, lib._("CantFindBuild", self.__lang__))
 
     @lib.discord.ext.commands.command(name='updatebuilds', pass_context=True)
     async def updatebuild(self, ctx):
@@ -91,48 +93,75 @@ class BuildList(lib.discord.ext.commands.Cog):
     async def metasheet(self, ctx):
         if ctx.author.id in lib.GlobalDict.ListAdmin:
 
+            #Première étape : Les builds Metas
             MetaSheetListe = lib.Builds_Tools.get_metasheetdata()
             AlreadyUpdated = []
 
             for Omni in MetaSheetListe:
 
                 for lien in MetaSheetListe[Omni]:
-                
-                    #On utilise le builder FR
-                    lien = lien.replace(".com", ".fr")
 
                     #ON GET LES BUILDINFOS
                     BuildInfos = lib.Builder_JSON.get_hash(lien)
 
                     #On check la version
-                    if BuildInfos[0] in lib.Builder_Config.omnicells:
+                    if BuildInfos != ():
+                        if BuildInfos[0] in lib.Builder_Config.omnicells:
 
-                        #Omnicell
-                        Omnicell = Omni
-                        #Weapon
-                        Weapon = self.__names_json__["Weapons"][str(BuildInfos[lib.Builder_Config.weapons[BuildInfos[0]]])]
-                        #Element
-                        Element = self.__data_json__["weapons"][Weapon]["elemental"]
-                        #Type
-                        Type = self.__data_json__["weapons"][Weapon]["type"]
+                            #Omnicell
+                            Omnicell = Omni
+                            #Weapon
+                            Weapon = self.__names_json__["Weapons"][str(BuildInfos[lib.Builder_Config.weapons[BuildInfos[0]]])]
+                            #Element
+                            Element = self.__data_json__["weapons"][Weapon]["elemental"]
+                            #Type
+                            Type = self.__data_json__["weapons"][Weapon]["type"]
 
-                        if [Omnicell, Type, Element] not in AlreadyUpdated:
-                        
-                            current_Build, build_exist = lib.Builds_Tools.get_build_link(self.__buildlist__, Omnicell, Type, Element)
-                            AlreadyUpdated.append([Omnicell, Type, Element])
+                            if [Omnicell, Type, Element] not in AlreadyUpdated:
+                            
+                                current_Build, build_exist = lib.Builds_Tools.get_build_link(self.__buildlist__, Omnicell, Type, Element)
+                                AlreadyUpdated.append([Omnicell, Type, Element])
 
-                            if build_exist == True:
-                                self.__buildlist__ = lib.Builds_Tools.update_build_link(self.__buildlist__, lien, Omnicell, Type, Element)
+                                if build_exist == True:
+                                    self.__buildlist__ = lib.Builds_Tools.update_build_link(self.__buildlist__, lien, Omnicell, Type, Element)
 
-                            else:
-                                newRow = [Omnicell, Type, Element, lien]
-                                self.__buildlist__.append(newRow)
+                                else:
+                                    newRow = [Omnicell, Type, Element, lien]
+                                    self.__buildlist__.append(newRow)
 
-                    else:
-                        lien = lien.replace(".fr", ".com")
-                        channel = self.bot.get_channel(self._channelanalysis_)
-                        await channel.send(f"Anomalie identifié : \n{Omni}\n{lien}\n{BuildInfos}")
+                        else:
+                            lien = lien.replace(".fr", ".com")
+                            channel = self.bot.get_channel(self._channelanalysis_)
+                            await channel.send(f"Meta : Anomalie identifié : \n{Omnicell}\n{lien}\n{BuildInfos}")
                 
+            #Deuxième étape : Les builds Trials
+            #On supprime tout pour commencer
+            lib.GSheet.reset_trialdata(lib.BuildsDict.Builds_Workbook, lib.BuildsDict.Trials_Sheet, lib.BuildsDict.Builds_Trials_Range_Delete)
+            TrialSheetListe = lib.Builds_Tools.get_trialsheetdata()
+            AlreadyUpdated = []
+
+            for Behemoth in TrialSheetListe:
+
+                for lien in TrialSheetListe[Behemoth]:
+
+                    BuildInfos = lib.Builder_JSON.get_hash(lien)
+
+                    #On check la version
+                    if BuildInfos != ():
+                        if BuildInfos[0] in lib.Builder_Config.omnicells:
+
+                            #Weapon
+                            Weapon = self.__names_json__["Weapons"][str(BuildInfos[lib.Builder_Config.weapons[BuildInfos[0]]])]
+                            Type = self.__data_json__["weapons"][Weapon]["type"]
+
+                            if [Behemoth, Type] not in AlreadyUpdated:
+                                pass
+
+                        else:
+                            channel = self.bot.get_channel(self._channelanalysis_)
+                            await channel.send(f"Trials : Anomalie identifié : \n{Behemoth}\n{lien}\n{BuildInfos}")
+
+
             isDone = lib.GSheet.pushData(self.__buildlist__,lib.BuildsDict.Builds_Workbook, lib.BuildsDict.Builds_Sheet, lib.BuildsDict.Builds_start_letter, lib.BuildsDict.Builds_end_letter, lib.BuildsDict.Builds_start_row)
             if isDone == "Done":
                 await lib.Tools.send_messages(ctx, "Les données ont été chargées dans le GSheet")

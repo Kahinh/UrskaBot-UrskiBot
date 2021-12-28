@@ -16,56 +16,61 @@ class BuildList(lib.discord.ext.commands.Cog):
     @lib.cog_ext.cog_slash(name="Builds", description="Bibliothèque de builds optimisés & meta", options=[
                 lib.create_option(
                     name="type",
-                    description="which type of builds do you want ?",
+                    description="Quel type de builds souhaitez-vous ?",
                     option_type=3,
                     required=True,
                     choices=[
-                       {'name': 'Iceborne', 'value': 'Iceborne'},
-                       {'name': 'Bastion', 'value': 'Bastion'},
-                       {'name': 'Discipline', 'value': 'Discipline'},
-                       {'name': 'Tempest', 'value': 'Tempest'},
-                       {'name': 'Revenant', 'value': 'Revenant'},
-                       {'name': 'Catalyst', 'value': 'Catalyst'}
+                       {'name': 'Sang-Froid - Débutant : Défense et Vol de vie', 'value': 'Sang froid'},
+                       {'name': 'Bastion - Intermédiaire : Bouclier et Dégâts Critiques', 'value': 'Bastion'},
+                       {'name': 'Discipline - Expérimenté : Offensif & Dégâts Critiques', 'value': 'Discipline'},
+                       {'name': 'Tempête - Intermédiaire : Célérité et Esquive', 'value': 'Tempête'},
+                       {'name': 'Spectre - Expérimenté : Transfert Vie/Dégâts', 'value': 'Spectre'},
+                       {'name': 'Catalyse - Expérimenté : Offensif & Potions', 'value': 'Catalyse'}
                     ]
                 ),
                 lib.create_option(
-                  name="weapon",
-                  description="Which weapon in your build ?",
+                  name="arme",
+                  description="Pour quelle arme souhaitez-vous ce build ?",
                   option_type=3,
                   required=True,
                     choices=[
-                       {'name': 'Sword', 'value': 'Sword'},
-                       {'name': 'Warpike', 'value': 'War Pike'},
-                       {'name': 'Aether Strikers', 'value': 'Aether Strikers'},
-                       {'name': 'Chain Blades', 'value': 'Chain Blades'},
-                       {'name': 'Axe', 'value': 'Axe'},
-                       {'name': 'Hammer', 'value': 'Hammer'},
-                       {'name': 'Repeaters', 'value': 'Repeater'}
+                       {'name': 'Épée', 'value': 'Épée'},
+                       {'name': 'Aéthérolance', 'value': 'Aéthérolance'},
+                       {'name': 'Cestes Aéthériques', 'value': 'Cestes Aethériques'},
+                       {'name': 'Chaîne-lames', 'value': 'Chaînes-lames'},
+                       {'name': 'Hache', 'value': 'Hache'},
+                       {'name': 'Marteau', 'value': 'Marteau'},
+                       {'name': 'Répéteurs', 'value': 'Repeater'}
                     ]
                 ),
                 lib.create_option(
-                  name="element",
-                  description="Which element in your build ?",
+                  name="élément",
+                  description="Quel sera l'élément de votre build ?",
                   option_type=3,
                   required=True,
                     choices=[
-                       {'name': 'Shock', 'value': 'Shock'},
-                       {'name': 'Blaze', 'value': 'Blaze'},
-                       {'name': 'Umbral', 'value': 'Umbral'},
-                       {'name': 'Terra', 'value': 'Terra'},
-                       {'name': 'Frost', 'value': 'Frost'},
-                       {'name': 'Radiant', 'value': 'Radiant'}
+                       {'name': 'Foudroyant', 'value': 'Foudroyant'},
+                       {'name': 'Incandescent', 'value': 'Incandescent'},
+                       {'name': 'Obscur', 'value': 'Obscur'},
+                       {'name': 'Tellurique', 'value': 'Tellurique'},
+                       {'name': 'Givrant', 'value': 'Givrant'},
+                       {'name': 'Rayonnant', 'value': 'Rayonnant'}
                     ]
                 )
              ])
-    async def _builds(self, ctx: lib.SlashContext, type, weapon, element):
+    async def _builds(self, ctx: lib.SlashContext, type, arme, élément):
+
+        #Trad
+        type = lib.BuildsDict.trad_Omni[type]
+        weapon = lib.BuildsDict.trad_Weapon[arme]
+        element = lib.BuildsDict.trad_Element[élément]
 
         build_link, embed, self.__count__ = lib.Builds_Tools.create_build_embed("EN", self.__buildlist__, self.__names_json__, self.__data_json__, self.__count__, type, weapon, element)
 
         if build_link != "":
             await lib.Tools.send_messages(ctx, embed, "embed")
         else:
-            await lib.Tools.send_messages(ctx, "Je n'ai pas trouvé de builds convenant à votre requête.")
+            await lib.Tools.send_messages(ctx, lib._("CantFindBuild", self.__lang__))
 
     async def updatebuilds(self):
         #ON LOAD GSHEET

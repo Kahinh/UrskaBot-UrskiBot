@@ -9,6 +9,7 @@ from discord_slash.utils.manage_commands import create_option, create_choice
 import pickle
 import gspread
 import urllib.request, json 
+import time
 
 from bs4 import BeautifulSoup
 import feedparser

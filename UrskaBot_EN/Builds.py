@@ -1,21 +1,20 @@
 import lib
 
 print("Builds : √")
-FileName = lib.GlobalFiles.file_BuildList
-FileName_Trial = lib.GlobalFiles.file_TrialList
 
 class BuildList(lib.discord.ext.commands.Cog):
     def __init__(self, bot):
         self.bot = bot
         self.__lang__ = "EN"
-        self.__buildlist__ = lib.Pickles.LoadPickle(FileName)
-        self.__triallist__ = lib.Pickles.LoadPickle(FileName_Trial)
+        self.__buildlist__ = lib.Pickles.LoadPickle(lib.GlobalFiles.file_BuildList)
+        self.__triallist__ = lib.Pickles.LoadPickle(lib.GlobalFiles.file_TrialList)
+        self.__currenttrial__ = lib.Pickles.LoadPickle(lib.GlobalFiles.file_CurrentTrial,"Str")
         self.__names_json__ = lib.Builder_JSON.get_names_json("EN")
         self.__data_json__ = lib.Builder_JSON.get_data_json("EN")
         self.__count__ = 1
         self._channelanalysis_ = lib.GlobalDict.channel_BuildAnalysis
 
-    @lib.cog_ext.cog_slash(name="Builds", description="Library of meta builds (EN)", options=[
+    @lib.cog_ext.cog_slash(name="Builds", description="Library of meta builds", options=[
                 lib.create_option(
                     name="type",
                     description="which type of builds do you want ?",
@@ -73,13 +72,17 @@ class BuildList(lib.discord.ext.commands.Cog):
     async def updatebuild(self, ctx):
         if ctx.author.id in lib.GlobalDict.ListAdmin:
             #ON LOAD GSHEET
-            self.__buildlist__ = lib.Builds_Tools.get_buildsdata()
+            self.__buildlist__ = lib.Pickles.LoadPickle(lib.GlobalFiles.file_BuildList)
+            self.__triallist__ = lib.Pickles.LoadPickle(lib.GlobalFiles.file_TrialList)
+            self.__currenttrial__ = lib.Pickles.LoadPickle(lib.GlobalFiles.file_CurrentTrial,"Str")
 
             #ON LOAD LES JSONS
             self.__names_json__ = lib.Builder_JSON.get_names_json("EN")
             self.__data_json__ = lib.Builder_JSON.get_data_json("EN")
 
             await lib.Tools.send_messages(ctx, lib._("DataLoaded", self.__lang__))
+            BotDiscussion_channel = self.bot.get_channel(lib.GlobalDict.channel_BotDiscussion)
+            await lib.Tools.send_messages(BotDiscussion_channel, "//currentbuilds A ton tour UrskiBot !")
 
     @lib.discord.ext.commands.command(name="infobuild", pass_context=True)
     async def pushbuild(self, ctx, *, lien):
@@ -133,12 +136,26 @@ class BuildList(lib.discord.ext.commands.Cog):
                             lien = lien.replace(".fr", ".com")
                             channel = self.bot.get_channel(self._channelanalysis_)
                             await channel.send(f"Meta : Anomalie identifié : \n{Omnicell}\n{lien}\n{BuildInfos}")
-                
-            #Deuxième étape : Les builds Trials
+
+            isDone_Meta = lib.GSheet.pushData(self.__buildlist__,lib.BuildsDict.Builds_Workbook, lib.BuildsDict.Builds_Sheet, lib.BuildsDict.Builds_start_letter, lib.BuildsDict.Builds_end_letter, lib.BuildsDict.Builds_start_row)
+            if isDone_Meta == "Done":
+                #ON LOAD GSHEET
+                self.__buildlist__ = lib.Builds_Tools.get_buildsdata()
+                await lib.Tools.send_messages(ctx, "Les données ont été chargées dans le GSheet")
+                BotDiscussion_channel = self.bot.get_channel(lib.GlobalDict.channel_BotDiscussion)
+                await lib.Tools.send_messages(BotDiscussion_channel, "//currentbuilds à ton tour UrskiBot")
+            else:
+                await lib.Tools.send_messages(ctx, "Ca a merdé chef")
+
+    @lib.discord.ext.commands.command(name='trialsheet', pass_context=True)
+    async def trialsheet(self, ctx):
+        if ctx.author.id in lib.GlobalDict.ListAdmin:
+
             #On supprime tout pour commencer
             lib.GSheet.reset_trialdata(lib.BuildsDict.Builds_Workbook, lib.BuildsDict.Trials_Sheet, lib.BuildsDict.Builds_Trials_Range_Delete)
             TrialSheetListe = lib.Builds_Tools.get_trialsheetdata()
             AlreadyUpdated = []
+            TrialBuildListe = []
 
             for Behemoth in TrialSheetListe:
 
@@ -155,22 +172,68 @@ class BuildList(lib.discord.ext.commands.Cog):
                             Type = self.__data_json__["weapons"][Weapon]["type"]
 
                             if [Behemoth, Type] not in AlreadyUpdated:
-                                pass
+                                AlreadyUpdated.append([Behemoth, Type])
+                                newRow = [Behemoth, Type, lien]
+                                TrialBuildListe.append(newRow)
 
                         else:
                             channel = self.bot.get_channel(self._channelanalysis_)
                             await channel.send(f"Trials : Anomalie identifié : \n{Behemoth}\n{lien}\n{BuildInfos}")
 
-
-            isDone = lib.GSheet.pushData(self.__buildlist__,lib.BuildsDict.Builds_Workbook, lib.BuildsDict.Builds_Sheet, lib.BuildsDict.Builds_start_letter, lib.BuildsDict.Builds_end_letter, lib.BuildsDict.Builds_start_row)
-            if isDone == "Done":
+            isDone_Trial = lib.GSheet.pushData(TrialBuildListe, lib.BuildsDict.Builds_Workbook, lib.BuildsDict.Trials_Sheet, lib.BuildsDict.Builds_Trials_start_letter, lib.BuildsDict.Builds_Trials_end_letter, lib.BuildsDict.Builds_Trials_start_row)
+            if isDone_Trial == "Done":
+                #ON LOAD GSHEET
+                self.__triallist__ = lib.Builds_Tools.get_trialsdata()
                 await lib.Tools.send_messages(ctx, "Les données ont été chargées dans le GSheet")
-                await lib.Tools.send_messages(ctx, "//updatebuilds à ton tour UrskiBot")
+                BotDiscussion_channel = self.bot.get_channel(lib.GlobalDict.channel_BotDiscussion)
+                await lib.Tools.send_messages(BotDiscussion_channel, "//currentbuilds à ton tour UrskiBot")
             else:
                 await lib.Tools.send_messages(ctx, "Ca a merdé chef")
 
-            #ON LOAD GSHEET
-            self.__buildlist__ = lib.Builds_Tools.get_buildsdata()
+    @lib.discord.ext.commands.command(name='updatetrials', pass_context=True)
+    async def updatetrials(self, ctx, *, behemoth="empty"):
+        exist = False
+        for row in self.__triallist__:
+            if behemoth == row[0]:
+                exist = True
+                break
+
+        if exist or behemoth == "empty":
+            self.__currenttrial__ = behemoth
+            lib.Pickles.DumpPickle(lib.GlobalFiles.file_CurrentTrial, self.__currenttrial__)
+
+            await lib.Tools.send_messages(ctx, f"Update : Le current Trial est : {self.__currenttrial__}")
+            BotDiscussion_channel = self.bot.get_channel(lib.GlobalDict.channel_BotDiscussion)
+            await lib.Tools.send_messages(BotDiscussion_channel, f"//currenttrials A toi UrskiBot !")
+
+    @lib.cog_ext.cog_slash(name="Trials", description="Library of Builds for current Trial", options=[
+                lib.create_option(
+                  name="weapon",
+                  description="Which weapon do you want to play ?",
+                  option_type=3,
+                  required=True,
+                    choices=[
+                       {'name': 'Sword', 'value': 'Sword'},
+                       {'name': 'Warpike', 'value': 'War Pike'},
+                       {'name': 'Aether Strikers', 'value': 'Aether Strikers'},
+                       {'name': 'Chain Blades', 'value': 'Chain Blades'},
+                       {'name': 'Axe', 'value': 'Axe'},
+                       {'name': 'Hammer', 'value': 'Hammer'},
+                       {'name': 'Repeaters', 'value': 'Repeater'}
+                    ]
+                )
+             ])
+    async def _trials(self, ctx: lib.SlashContext, weapon):
+        if self.__currenttrial__ != "" and self.__currenttrial__ != "empty":
+            build_link, embed, self.__count__ = lib.Builds_Tools.create_trial_embed("EN", self.__triallist__, self.__names_json__, self.__data_json__, self.__count__, self.__currenttrial__, weapon)
+
+            if build_link != "":
+                await lib.Tools.send_messages(ctx, embed, "embed")
+            else:
+                await lib.Tools.send_messages(ctx, lib._("CantFindBuild", self.__lang__))
+        else:
+            await lib.Tools.send_messages(ctx, lib._("TrialNotSetup", self.__lang__))
+
 
 def setup(bot):
     bot.add_cog(BuildList(bot))

@@ -32,3 +32,11 @@ channel_AdminReddit_env = {
     'Prod' : 816351837296918528
 }
 channel_AdminReddit = channel_AdminReddit_env[lib.tokens.var_TestProd]
+
+#Channel Discussion Bot
+#Données Test/prod
+channel_BotDiscussion_env = {
+    'Test' : 924236539511332926,
+    'Prod' : 925676976042303519
+}
+channel_BotDiscussion = channel_BotDiscussion_env[lib.tokens.var_TestProd]

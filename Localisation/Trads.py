@@ -14,7 +14,8 @@ Dictionnaire = {
     "Cells" : "__Cells__",
     "Notes" : "__Notes__",
     "ClickHere" : "Click here ->[Dauntless-Builder.com]",
-    "Request" : "Request n°"
+    "Request" : "Request n°",
+    "TrialNotSetup" : "We are not able to provide you with a build as current Trial is not setup or builds are not populated in the sheet"
     },
     "FR" : {
     'DataLoaded' : "Les données sont chargées dans le système.",
@@ -31,6 +32,7 @@ Dictionnaire = {
     "Cells" : "__Cells__",
     "Notes" : "__Notes__",
     "ClickHere" : "Click here ->[Dauntless-Builder.com]",
-    "Request" : "Request n°"
+    "Request" : "Request n°",
+    "TrialNotSetup" : "We are not able to provide you with a build as current Trial is not setup or builds are not populated in the sheet"
     }
 }

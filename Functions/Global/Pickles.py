@@ -10,6 +10,8 @@ def LoadPickle(FileName, mode="Liste"):
             data = []
         elif mode =="Dict":
             data = {}
+        elif mode == "Str":
+            data = ""
 
     return data
 

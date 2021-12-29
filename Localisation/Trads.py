@@ -15,7 +15,10 @@ Dictionnaire = {
     "Notes" : "__Notes__",
     "ClickHere" : "Click here ->[Dauntless-Builder.com]",
     "Request" : "Request n°",
-    "TrialNotSetup" : "We are not able to provide you with a build as current Trial is not setup or builds are not populated in the sheet"
+    "TrialNotSetup" : "We are not able to provide you with a build as current Trial is not setup or builds are not populated in the sheet",
+    "TrialTitleRequest" : "Trial : ",
+    "Trials_Notes_part1" : "All **UrskaBot** trial builds come from the [Trial Official Metasheet](https://docs.google.com/spreadsheets/d/1Kv3nlr7y5DJB_olhATqXXh-jPCkDygNCVyHkDwllTsc/edit#gid=0).",
+    "Trials_Notes_part2" : "You can follow the link above in order to get other builds and/or pots information and tips."
     },
     "FR" : {
     'DataLoaded' : "Les données sont chargées dans le système.",
@@ -33,6 +36,9 @@ Dictionnaire = {
     "Notes" : "__Notes__",
     "ClickHere" : "Click here ->[Dauntless-Builder.com]",
     "Request" : "Request n°",
-    "TrialNotSetup" : "We are not able to provide you with a build as current Trial is not setup or builds are not populated in the sheet"
+    "TrialNotSetup" : "We are not able to provide you with a build as current Trial is not setup or builds are not populated in the sheet",
+    "TrialTitleRequest" : "Trial : ",
+    "Trials_Notes_part1" : "All **UrskaBot** trial builds come from the [Trial Official Metasheet](https://docs.google.com/spreadsheets/d/1Kv3nlr7y5DJB_olhATqXXh-jPCkDygNCVyHkDwllTsc/edit#gid=0).",
+    "Trials_Notes_part2" : "You can follow the link above in order to get other builds and/or pots information and tips."
     }
 }

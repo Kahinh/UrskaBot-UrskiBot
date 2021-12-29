@@ -178,11 +178,11 @@ def create_trial_embed(lang, triallist, names_json, data_json, count, behemoth, 
             lib._("Weapon", lang) + f" **{type}**"
 
         #note
-        note = lib._("Notes_part1", lang) \
+        note = lib._("Trials_Notes_part1", lang) \
             + "\n" + \
-            lib._("Notes_part2", lang)
+            lib._("Trials_Notes_part2", lang)
 
-        embed=lib.discord.Embed(title=lib._("BuildTitleRequest", lang), \
+        embed=lib.discord.Embed(title=lib._("TrialTitleRequest", lang) + behemoth, \
         #url=f"{build_link}", \
         description=f"{description}", \
         color=embedcolor)

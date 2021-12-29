@@ -111,7 +111,7 @@ class BuildList(lib.discord.ext.commands.Cog):
              ])
     async def _trials(self, ctx: lib.SlashContext, arme):
         if self.__currenttrial__ != "" and self.__currenttrial__ != "empty":
-            build_link, embed, self.__count__ = lib.Builds_Tools.create_trial_embed("EN", self.__triallist__, self.__names_json__, self.__data_json__, self.__count__, self.__currenttrial__, weapon)
+            build_link, embed, self.__count__ = lib.Builds_Tools.create_trial_embed("EN", self.__triallist__, self.__names_json__, self.__data_json__, self.__count__, self.__currenttrial__, arme)
 
             if build_link != "":
                 await lib.Tools.send_messages(ctx, embed, "embed")

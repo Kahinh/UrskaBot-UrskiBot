@@ -8,7 +8,7 @@ else:
     lib.ssl._create_default_https_context = _create_unverified_https_context
 
 token = lib.tokens.UrskiBot
-prefix = "//"
+prefix = "!!"
 
 intents = lib.discord.Intents.default()
 intents.members = True

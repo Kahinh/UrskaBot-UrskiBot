@@ -97,6 +97,9 @@ def launch_tracker():
 
 async def compare_PastFeed(self, redditchannels, FeedRedditID_Bot):
 
+    channeladmin = self.bot.get_channel(lib.GlobalDict.channel_AdminReddit)
+    await lib.Tools.send_messages(channeladmin, "C'est parti")
+
     #On récupère les PastFeed
     Global_PastFeed = lib.Pickles.LoadPickle(lib.GlobalFiles.file_GlobalReddit, "Dict")
     Bot_PastFeed = lib.Pickles.LoadPickle(FeedRedditID_Bot, "Dict")
@@ -110,17 +113,19 @@ async def compare_PastFeed(self, redditchannels, FeedRedditID_Bot):
             if feed not in Bot_PastFeed:
                 Bot_PastFeed[feed] = []
 
-                #On get le content
-                for id in Global_PastFeed[feed]:
+            #On get le content
+            for id in Global_PastFeed[feed]:
 
-                    #Si le message a pas encore été posté
-                    if id not in Bot_PastFeed[feed]:
+                #Si le message a pas encore été posté
+                if id not in Bot_PastFeed[feed]:
 
-                        Bot_PastFeed[feed].append(id)
-                        if len(Bot_PastFeed[feed]) > 50:
-                            Bot_PastFeed[feed].pop(0)
+                    Bot_PastFeed[feed].append(id)
+                    if len(Bot_PastFeed[feed]) > 50:
+                        Bot_PastFeed[feed].pop(0)
 
-                        await EmbedDiscord(self, Global_PastFeed[feed][id]["label"], Global_PastFeed[feed][id]["title"], Global_PastFeed[feed][id]["content"], Global_PastFeed[feed][id]["thumbnail"], Global_PastFeed[feed][id]["link"], Global_PastFeed[feed][id]["date"], redditchannels)
+                    await EmbedDiscord(self, Global_PastFeed[feed][id]["label"], Global_PastFeed[feed][id]["title"], Global_PastFeed[feed][id]["content"], Global_PastFeed[feed][id]["thumbnail"], Global_PastFeed[feed][id]["link"], Global_PastFeed[feed][id]["date"], redditchannels)
 
     #Pour finir, on sauvegarde dans le pickle
     lib.Pickles.DumpPickle(FeedRedditID_Bot, Bot_PastFeed)
+
+    await lib.Tools.send_messages(channeladmin, "C'est fini")

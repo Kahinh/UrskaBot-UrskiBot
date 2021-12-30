@@ -112,6 +112,10 @@ def create_build_embed(lang, buildlist, names_json, data_json, count, type, weap
         else:
             embedcolor = lib.BuildsDict.OmniColor['Standard']
         
+        type = reversed_trad(lib.BuildsDict.trad_Omni, type)
+        weapon = reversed_trad(lib.BuildsDict.trad_Weapon, weapon)
+        element = reversed_trad(lib.BuildsDict.trad_Element, element)
+
         #description
         description = lib._("SummaryRequest", lang) \
             + "\n" + \
@@ -142,7 +146,7 @@ def create_build_embed(lang, buildlist, names_json, data_json, count, type, weap
 
         return build_link, embed, count
 
-def create_trial_embed(lang, triallist, names_json, data_json, count, behemoth, type):
+def create_trial_embed(lang, triallist, names_json, data_json, count, behemoth, type, trialpics):
 
     #Check que le build existe
     build_link, build_exist = lib.Builds_Tools.get_trial_link(triallist, behemoth, type)
@@ -172,6 +176,8 @@ def create_trial_embed(lang, triallist, names_json, data_json, count, behemoth, 
         else:
             embedcolor = lib.BuildsDict.OmniColor['Standard']
         
+        type = reversed_trad(lib.BuildsDict.trad_Weapon, type)
+
         #description
         description = lib._("SummaryRequest", lang) \
             + "\n" + \
@@ -193,7 +199,18 @@ def create_trial_embed(lang, triallist, names_json, data_json, count, behemoth, 
         
         embed.set_thumbnail(url=f"{thumbnail}")
         embed.set_footer(text=lib._("Request", lang) + f"{count}")
+
+        #Image
+        if behemoth in trialpics:
+            embed.set_image(url=trialpics[behemoth][lang])
         
         count += 1
 
         return build_link, embed, count
+
+def reversed_trad(data, trad):
+    for item in data:
+        if data[item] == trad:
+            trad = item
+            break
+    return trad

@@ -57,7 +57,7 @@ trad_Omni = {
 
 trad_Weapon = {
     'Épée' : "Sword",
-    'Aéthérolance' : "Warpike",
+    'Aéthérolance' : "War Pike",
     'Cestes Aethériques' : "Aether Strikers",
     'Chaînes-lames' : "Chain Blades",
     'Hache' : "Axe",

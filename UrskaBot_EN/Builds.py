@@ -9,12 +9,13 @@ class BuildList(lib.discord.ext.commands.Cog):
         self.__buildlist__ = lib.Pickles.LoadPickle(lib.GlobalFiles.file_BuildList)
         self.__triallist__ = lib.Pickles.LoadPickle(lib.GlobalFiles.file_TrialList)
         self.__currenttrial__ = lib.Pickles.LoadPickle(lib.GlobalFiles.file_CurrentTrial,"Str")
+        self.__trialpics__ = lib.Pickles.LoadPickle(lib.GlobalFiles.file_TrialPics,"Dict")
         self.__names_json__ = lib.Builder_JSON.get_names_json("EN")
         self.__data_json__ = lib.Builder_JSON.get_data_json("EN")
         self.__count__ = 1
         self._channelanalysis_ = lib.GlobalDict.channel_BuildAnalysis
 
-    @lib.cog_ext.cog_slash(name="Builds", description="Library of meta builds", options=[
+    @lib.cog_ext.cog_slash(name="Build", description="Library of meta builds", options=[
                 lib.create_option(
                     name="type",
                     description="which type of builds do you want ?",
@@ -61,7 +62,7 @@ class BuildList(lib.discord.ext.commands.Cog):
              ])
     async def _builds(self, ctx: lib.SlashContext, type, weapon, element):
 
-        build_link, embed, self.__count__ = lib.Builds_Tools.create_build_embed("EN", self.__buildlist__, self.__names_json__, self.__data_json__, self.__count__, type, weapon, element)
+        build_link, embed, self.__count__ = lib.Builds_Tools.create_build_embed(self.__lang__, self.__buildlist__, self.__names_json__, self.__data_json__, self.__count__, type, weapon, element)
 
         if build_link != "":
             await lib.Tools.send_messages(ctx, embed, "embed")
@@ -75,6 +76,7 @@ class BuildList(lib.discord.ext.commands.Cog):
             self.__buildlist__ = lib.Pickles.LoadPickle(lib.GlobalFiles.file_BuildList)
             self.__triallist__ = lib.Pickles.LoadPickle(lib.GlobalFiles.file_TrialList)
             self.__currenttrial__ = lib.Pickles.LoadPickle(lib.GlobalFiles.file_CurrentTrial,"Str")
+            self.__trialpics__ = lib.Pickles.LoadPickle(lib.GlobalFiles.file_TrialPics,"Dict")
 
             #ON LOAD LES JSONS
             self.__names_json__ = lib.Builder_JSON.get_names_json("EN")
@@ -191,7 +193,7 @@ class BuildList(lib.discord.ext.commands.Cog):
                 await lib.Tools.send_messages(ctx, "Ca a merdé chef")
 
     @lib.discord.ext.commands.command(name='updatetrials', pass_context=True)
-    async def updatetrials(self, ctx, *, behemoth="empty"):
+    async def updatetrials(self, ctx, behemoth="empty", pic_FR="", pic_EN=""):
         exist = False
         for row in self.__triallist__:
             if behemoth == row[0]:
@@ -199,6 +201,20 @@ class BuildList(lib.discord.ext.commands.Cog):
                 break
 
         if exist or behemoth == "empty":
+
+            if exist:
+                if pic_FR !="" or pic_EN != "":
+                    if behemoth not in self.__trialpics__:
+                        self.__trialpics__[behemoth] = {}
+                        self.__trialpics__[behemoth]["EN"] = ""
+                        self.__trialpics__[behemoth]["FR"] = ""
+                    if pic_FR !="":
+                        self.__trialpics__[behemoth]["FR"] = pic_FR
+                    if pic_EN !="":
+                        self.__trialpics__[behemoth]["EN"] = pic_EN
+                    
+                    lib.Pickles.DumpPickle(lib.GlobalFiles.file_TrialPics, self.__trialpics__)
+
             self.__currenttrial__ = behemoth
             lib.Pickles.DumpPickle(lib.GlobalFiles.file_CurrentTrial, self.__currenttrial__)
 
@@ -206,7 +222,7 @@ class BuildList(lib.discord.ext.commands.Cog):
             BotDiscussion_channel = self.bot.get_channel(lib.GlobalDict.channel_BotDiscussion)
             await lib.Tools.send_messages(BotDiscussion_channel, f"//currenttrials A toi UrskiBot !")
 
-    @lib.cog_ext.cog_slash(name="Trials", description="Library of Builds for current Trial", options=[
+    @lib.cog_ext.cog_slash(name="Trial", description="Library of Builds for current Trial", options=[
                 lib.create_option(
                   name="weapon",
                   description="Which weapon do you want to play ?",
@@ -225,7 +241,7 @@ class BuildList(lib.discord.ext.commands.Cog):
              ])
     async def _trials(self, ctx: lib.SlashContext, weapon):
         if self.__currenttrial__ != "" and self.__currenttrial__ != "empty":
-            build_link, embed, self.__count__ = lib.Builds_Tools.create_trial_embed("EN", self.__triallist__, self.__names_json__, self.__data_json__, self.__count__, self.__currenttrial__, weapon)
+            build_link, embed, self.__count__ = lib.Builds_Tools.create_trial_embed(self.__lang__, self.__triallist__, self.__names_json__, self.__data_json__, self.__count__, self.__currenttrial__, weapon, self.__trialpics__)
 
             if build_link != "":
                 await lib.Tools.send_messages(ctx, embed, "embed")

@@ -5,3 +5,4 @@ file_Reddit_UrskaBot = lib.os.path.abspath(lib.os.curdir) + '/gitignore/FeedRedd
 file_GlobalReddit = lib.os.path.abspath(lib.os.curdir) + '/gitignore/Global_FeedRedditID.pkl'
 file_TrialList = lib.os.path.abspath(lib.os.curdir) + '/gitignore/TrialList.pkl'
 file_CurrentTrial = lib.os.path.abspath(lib.os.curdir) + '/gitignore/CurrentTrial.pkl'
+file_TrialPics = lib.os.path.abspath(lib.os.curdir) + '/gitignore/TrialPics.pkl'

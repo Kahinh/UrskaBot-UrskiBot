@@ -1,14 +1,14 @@
 # UrskaBot-UrskiBot
 
 **DISCLAIMER :**
-Bot can have some issues on Phone because the bot will replace the last choice of the SlashCommands with a space " " at the end.
-So in place of "Shock" your phone will try to push "Shock " and then it won't work.
+Bot can have some issues on Phone because the phone will try to add a space at the end of your last choice.
+So in place of "Shock" your phone will try to push "Shock " and then it won't work. The issue comes from Discord. Not from the Bot itself.
 
 **This bot is linked to the amazing websites :**
 - https://dauntless-builder.fr/ by Medaey
 - https://www.dauntless-builder.com/ by atomicptr
 
-**Data about builds come from :**
+**Data about builds comes from :**
 - [MetaSheet](https://docs.google.com/spreadsheets/d/1-I4LQ_8uNqV9LuybXhz2wjmcPeTNNGWRZ-kFjsckwtk/edit#gid=0)
 - [TrialSheet](https://docs.google.com/spreadsheets/d/1Kv3nlr7y5DJB_olhATqXXh-jPCkDygNCVyHkDwllTsc/edit)
 Maintained by the Official Dauntless Community, mainly Nthngnss

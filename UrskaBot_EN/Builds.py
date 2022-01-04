@@ -15,7 +15,7 @@ class BuildList(lib.discord.ext.commands.Cog):
         self.__count__ = 1
         self._channelanalysis_ = lib.GlobalDict.channel_BuildAnalysis
 
-    @lib.cog_ext.cog_slash(name="Build", description="Library of meta builds", options=[
+    @lib.cog_ext.cog_slash(name="Build", description="Library of meta builds.", options=[
                 lib.create_option(
                     name="type",
                     description="which type of builds do you want ?",
@@ -221,8 +221,10 @@ class BuildList(lib.discord.ext.commands.Cog):
             await lib.Tools.send_messages(ctx, f"Update : Le current Trial est : {self.__currenttrial__}")
             BotDiscussion_channel = self.bot.get_channel(lib.GlobalDict.channel_BotDiscussion)
             await lib.Tools.send_messages(BotDiscussion_channel, f"//currenttrials A toi UrskiBot !")
+        else:
+            await lib.Tools.send_messages(ctx, f"FAIL : Le Behemoth suivant n'existe pas en trial : {behemoth}")
 
-    @lib.cog_ext.cog_slash(name="Trial", description="Library of Builds for current Trial", options=[
+    @lib.cog_ext.cog_slash(name="Trial", description="Library of Builds for current Trial.", options=[
                 lib.create_option(
                   name="weapon",
                   description="Which weapon do you want to play ?",

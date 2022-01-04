@@ -15,7 +15,7 @@ class BuildList(lib.discord.ext.commands.Cog):
         self.__count__ = 1
         self._channelanalysis_ = lib.GlobalDict.channel_BuildAnalysis
 
-    @lib.cog_ext.cog_slash(name="Build", description="Bibliothèque de builds optimisés & meta", options=[
+    @lib.cog_ext.cog_slash(name="Build", description="Bibliothèque de builds optimisés & meta.", options=[
                 lib.create_option(
                     name="type",
                     description="Quel type de builds souhaitez-vous ?",
@@ -124,7 +124,6 @@ class BuildList(lib.discord.ext.commands.Cog):
                 await lib.Tools.send_messages(ctx, lib._("CantFindBuild", self.__lang__))
         else:
             await lib.Tools.send_messages(ctx, lib._("TrialNotSetup", self.__lang__))
-
 
 def setup(bot):
     bot.add_cog(BuildList(bot))

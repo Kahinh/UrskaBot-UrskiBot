@@ -112,9 +112,10 @@ def create_build_embed(lang, buildlist, names_json, data_json, count, type, weap
         else:
             embedcolor = lib.BuildsDict.OmniColor['Standard']
         
-        type = reversed_trad(lib.BuildsDict.trad_Omni, type)
-        weapon = reversed_trad(lib.BuildsDict.trad_Weapon, weapon)
-        element = reversed_trad(lib.BuildsDict.trad_Element, element)
+        if lang == "FR":
+            type = reversed_trad(lib.BuildsDict.trad_Omni, type)
+            weapon = reversed_trad(lib.BuildsDict.trad_Weapon, weapon)
+            element = reversed_trad(lib.BuildsDict.trad_Element, element)
 
         #description
         description = lib._("SummaryRequest", lang) \
@@ -176,7 +177,8 @@ def create_trial_embed(lang, triallist, names_json, data_json, count, behemoth, 
         else:
             embedcolor = lib.BuildsDict.OmniColor['Standard']
         
-        type = reversed_trad(lib.BuildsDict.trad_Weapon, type)
+        if lang == "FR":
+            type = reversed_trad(lib.BuildsDict.trad_Weapon, type)
 
         #description
         description = lib._("SummaryRequest", lang) \

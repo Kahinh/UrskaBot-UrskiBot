@@ -98,7 +98,7 @@ def launch_tracker():
 async def compare_PastFeed(self, redditchannels, FeedRedditID_Bot):
 
     channeladmin = self.bot.get_channel(lib.GlobalDict.channel_AdminReddit)
-    await lib.Tools.send_messages(channeladmin, "C'est parti")
+    await lib.Tools.send_messages(channeladmin, "C'est parti", "standard", 7200)
 
     #On récupère les PastFeed
     Global_PastFeed = lib.Pickles.LoadPickle(lib.GlobalFiles.file_GlobalReddit, "Dict")
@@ -128,4 +128,4 @@ async def compare_PastFeed(self, redditchannels, FeedRedditID_Bot):
     #Pour finir, on sauvegarde dans le pickle
     lib.Pickles.DumpPickle(FeedRedditID_Bot, Bot_PastFeed)
 
-    await lib.Tools.send_messages(channeladmin, "C'est fini")
+    await lib.Tools.send_messages(channeladmin, "C'est fini", "standard", 7200)

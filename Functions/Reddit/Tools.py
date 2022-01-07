@@ -83,12 +83,14 @@ def launch_tracker():
                         if feed in lib.RedditDict.PHXL_Feeds:
                             media_thumbnail = lib.RedditDict.PHXL_Feeds[feed]
 
+                    date = lib.datetime.fromisoformat(entry.updated).strftime('%d %b %Y | %Hh%M')
+
                     PastFeed[feed][id]["label"] = entry.tags[0].label
                     PastFeed[feed][id]["title"] = entry.title
                     PastFeed[feed][id]["content"] = soupContent
                     PastFeed[feed][id]["thumbnail"] = media_thumbnail
                     PastFeed[feed][id]["link"] = entry.link
-                    PastFeed[feed][id]["date"] = entry.updated
+                    PastFeed[feed][id]["date"] = date
 
     #Pour finir, on sauvegarde dans le pickle
     lib.Pickles.DumpPickle(lib.GlobalFiles.file_GlobalReddit, PastFeed)

@@ -1,19 +1,15 @@
 import lib
 
-def get_build_link(data, omnicellule, arme, élément):
+def get_link(data, criterias):
     build_link = ""
     for row in data:
-        if row[0] == omnicellule and row[1] == arme and row[2] == élément:
-            build_link = row[3]
-            return build_link, True
-
-    return build_link, False
-
-def get_trial_link(data, behemoth, arme):
-    build_link = ""
-    for row in data:
-        if row[0] == behemoth and row[1] == arme:
-            build_link = row[2]
+        respected_criterias = 0
+        for i in range(len(criterias)):
+            if row[i] == criterias[i]:
+                respected_criterias += 1
+        
+        if respected_criterias == len(criterias):
+            build_link = row[len(criterias)]
             return build_link, True
 
     return build_link, False
@@ -24,17 +20,11 @@ def update_build_link(data, link, omnicellule, arme, élément):
             row[3]= link
             return data
 
-def get_trialsdata():
-    data = lib.GSheet.getData("Builds", lib.BuildsDict.Builds_Workbook, lib.BuildsDict.Trials_Sheet, lib.BuildsDict.Builds_Trials_Range_Push)
-    lib.Pickles.DumpPickle(lib.GlobalFiles.file_TrialList, data)
-    triallist = lib.Pickles.LoadPickle(lib.GlobalFiles.file_TrialList)
-    return triallist
-
-def get_buildsdata():
-    data = lib.GSheet.getData("Builds", lib.BuildsDict.Builds_Workbook, lib.BuildsDict.Builds_Sheet, lib.BuildsDict.Builds_Range)
-    lib.Pickles.DumpPickle(lib.GlobalFiles.file_BuildList, data)
-    buildlist = lib.Pickles.LoadPickle(lib.GlobalFiles.file_BuildList)
-    return buildlist
+def get_GoogleData(type, workbook, sheet, range, file):
+    data = lib.GSheet.getData(type, workbook, sheet, range)
+    lib.Pickles.DumpPickle(file, data)
+    datalist = lib.Pickles.LoadPickle(file)
+    return datalist
 
 def get_trialsheetdata():
 
@@ -85,7 +75,7 @@ def get_metasheetdata():
 def create_build_embed(lang, buildlist, names_json, data_json, count, type, weapon, element):
 
     #Check que le build existe
-    build_link, build_exist = lib.Builds_Tools.get_build_link(buildlist, type, weapon, element)
+    build_link, build_exist = lib.Builds_Tools.get_link(buildlist, [type, weapon, element])
     if build_link != "":
         
         #On change le lien si FR ou EN
@@ -150,7 +140,7 @@ def create_build_embed(lang, buildlist, names_json, data_json, count, type, weap
 def create_trial_embed(lang, triallist, names_json, data_json, count, behemoth, type, trialpics):
 
     #Check que le build existe
-    build_link, build_exist = lib.Builds_Tools.get_trial_link(triallist, behemoth, type)
+    build_link, build_exist = lib.Builds_Tools.get_link(triallist, [behemoth, type])
     if build_link != "":
         
         #On change le lien si FR ou EN

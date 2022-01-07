@@ -18,7 +18,6 @@ PHXL_Feeds = {
     'https://www.reddit.com/user/orz-PHX/.rss' : "https://www.redditstatic.com/avatars/defaults/v2/avatar_default_6.png",
     'https://www.reddit.com/user/C4_PHX/.rss' : "https://i.redd.it/snoovatar/avatars/7025ad3c-8513-418e-868b-b236b70c77b1.png",
     'https://www.reddit.com/user/ForgedPixel/.rss' : "https://styles.redditmedia.com/t5_jf4ji/styles/profileIcon_bbtgy44hh2z01.png?width=256&height=256&crop=256:256,smart&s=dab9151feeb9fa9936d014eafb0f523b5a0b11a2",
-    'https://www.reddit.com/user/Hellizard/.rss' : "https://styles.redditmedia.com/t5_bfwvb/styles/profileIcon_n4ti3izie4w01.jpg?width=256&height=256&crop=256:256,smart&s=503c06d1ad0e2acb6918502b559fc39555163f85",
     'https://www.reddit.com/user/theLegendLarry/.rss' : "https://i.redd.it/snoovatar/avatars/71c05c31-542d-4897-a87d-9fd6c670a8c6.png",
     'https://www.reddit.com/user/situatedmango/.rss' : "https://www.redditstatic.com/avatars/defaults/v2/avatar_default_4.png",
     'https://www.reddit.com/user/JulioNicoletti/.rss' : "https://i.redd.it/snoovatar/avatars/ed341f0a-b2ce-44d1-a9cc-aa9db3dcce8d.png",

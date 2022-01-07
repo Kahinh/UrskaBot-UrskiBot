@@ -124,7 +124,7 @@ class BuildList(lib.discord.ext.commands.Cog):
 
                             if [Omnicell, Type, Element] not in AlreadyUpdated:
                             
-                                current_Build, build_exist = lib.Builds_Tools.get_build_link(self.__buildlist__, Omnicell, Type, Element)
+                                current_Build, build_exist = lib.Builds_Tools.get_link(self.__buildlist__, [Omnicell, Type, Element])
                                 AlreadyUpdated.append([Omnicell, Type, Element])
 
                                 if build_exist == True:
@@ -142,7 +142,7 @@ class BuildList(lib.discord.ext.commands.Cog):
             isDone_Meta = lib.GSheet.pushData(self.__buildlist__,lib.BuildsDict.Builds_Workbook, lib.BuildsDict.Builds_Sheet, lib.BuildsDict.Builds_start_letter, lib.BuildsDict.Builds_end_letter, lib.BuildsDict.Builds_start_row)
             if isDone_Meta == "Done":
                 #ON LOAD GSHEET
-                self.__buildlist__ = lib.Builds_Tools.get_buildsdata()
+                self.__buildlist__ = lib.Builds_Tools.get_GoogleData("Builds", lib.BuildsDict.Builds_Workbook, lib.BuildsDict.Builds_Sheet, lib.BuildsDict.Builds_Range, lib.GlobalFiles.file_BuildList)
                 await lib.Tools.send_messages(ctx, "Les données ont été chargées dans le GSheet")
                 BotDiscussion_channel = self.bot.get_channel(lib.GlobalDict.channel_BotDiscussion)
                 await lib.Tools.send_messages(BotDiscussion_channel, "//currentbuilds à ton tour UrskiBot")
@@ -185,7 +185,7 @@ class BuildList(lib.discord.ext.commands.Cog):
             isDone_Trial = lib.GSheet.pushData(TrialBuildListe, lib.BuildsDict.Builds_Workbook, lib.BuildsDict.Trials_Sheet, lib.BuildsDict.Builds_Trials_start_letter, lib.BuildsDict.Builds_Trials_end_letter, lib.BuildsDict.Builds_Trials_start_row)
             if isDone_Trial == "Done":
                 #ON LOAD GSHEET
-                self.__triallist__ = lib.Builds_Tools.get_trialsdata()
+                self.__triallist__ = lib.Builds_Tools.get_GoogleData("Builds", lib.BuildsDict.Builds_Workbook, lib.BuildsDict.Trials_Sheet, lib.BuildsDict.Builds_Trials_Range_Push, lib.GlobalFiles.file_TrialList)
                 await lib.Tools.send_messages(ctx, "Les données ont été chargées dans le GSheet")
                 BotDiscussion_channel = self.bot.get_channel(lib.GlobalDict.channel_BotDiscussion)
                 await lib.Tools.send_messages(BotDiscussion_channel, "//currentbuilds à ton tour UrskiBot")

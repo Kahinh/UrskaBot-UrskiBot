@@ -63,16 +63,16 @@ class BuildList(lib.discord.ext.commands.Cog):
     async def _builds(self, ctx: lib.SlashContext, type, arme, élément):
 
         #Trad
-        type = lib.BuildsDict.trad_Omni[type]
-        weapon = lib.BuildsDict.trad_Weapon[arme]
-        element = lib.BuildsDict.trad_Element[élément]
+        type = lib.BuildsDict.trad_Builds["Types"][type]
+        weapon = lib.BuildsDict.trad_Builds["Weapons"][arme]
+        element = lib.BuildsDict.trad_Builds["Elements"][élément]
 
-        build_link, embed, self.__count__ = lib.Builds_Tools.create_build_embed(self.__lang__, self.__buildlist__, self.__names_json__, self.__data_json__, self.__count__, type, weapon, element)
+        build_link, embed, self.__count__ = lib.Builds_Tools.create_embed(self.__lang__, "Meta_Builds", self.__buildlist__, self.__names_json__, self.__data_json__, self.__count__, [type, weapon, element])
 
         if build_link != "":
             await lib.Tools.send_messages(ctx, embed, "embed")
         else:
-            await lib.Tools.send_messages(ctx, lib._("CantFindBuild", self.__lang__))
+            await lib.Tools.send_messages(ctx, lib._("Global", "CantFindBuild", self.__lang__))
 
     async def updatebuilds(self):
         #ON LOAD GSHEET
@@ -115,15 +115,21 @@ class BuildList(lib.discord.ext.commands.Cog):
     async def _trials(self, ctx: lib.SlashContext, arme):
         if self.__currenttrial__ != "" and self.__currenttrial__ != "empty":
 
-            weapon = lib.BuildsDict.trad_Weapon[arme]
-            build_link, embed, self.__count__ = lib.Builds_Tools.create_trial_embed(self.__lang__, self.__triallist__, self.__names_json__, self.__data_json__, self.__count__, self.__currenttrial__, weapon, self.__trialpics__)
+            #On récupère le lien de l'image du trial
+            if self.__currenttrial__ in self.__trialpics__:
+                image = self.__trialpics__[self.__currenttrial__][self.__lang__]
+            else:
+                image = ""
+
+            weapon = lib.BuildsDict.trad_Builds["Weapons"][arme]
+            build_link, embed, self.__count__ = lib.Builds_Tools.create_embed(self.__lang__, "Trial_Builds", self.__triallist__, self.__names_json__, self.__data_json__, self.__count__, [self.__currenttrial__, weapon], image)
 
             if build_link != "":
                 await lib.Tools.send_messages(ctx, embed, "embed")
             else:
-                await lib.Tools.send_messages(ctx, lib._("CantFindBuild", self.__lang__))
+                await lib.Tools.send_messages(ctx, lib._("Global", "CantFindBuild", self.__lang__))
         else:
-            await lib.Tools.send_messages(ctx, lib._("TrialNotSetup", self.__lang__))
+            await lib.Tools.send_messages(ctx, lib._("Global", "TrialNotSetup", self.__lang__))
 
 def setup(bot):
     bot.add_cog(BuildList(bot))

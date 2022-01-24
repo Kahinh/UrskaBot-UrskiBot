@@ -26,17 +26,14 @@ def get_GoogleData(type, workbook, sheet, range, file):
     datalist = lib.Pickles.LoadPickle(file)
     return datalist
 
-def get_trialsheetdata():
+def get_sheetdata(type, workbook, range, sheetList):
 
-    #D'abord, on get la liste des sheets = trials
-    SheetListe = lib.GSheet.get_trialsheetlist(lib.BuildsDict.Trials_Workbook)
+    LinkListe = {}
+    for Sheet in sheetList:
 
-    TrialSheetListe = {}
-    for Behemoth in SheetListe:
-
-        TrialSheetListe[Behemoth] = []
+        LinkListe[Sheet] = []
         
-        res = lib.GSheet.getData("Meta", lib.BuildsDict.Trials_Workbook, Behemoth, lib.BuildsDict.Trials_Range)
+        res = lib.GSheet.getData(type, workbook, Sheet, range)
 
         for row in res:
             
@@ -47,158 +44,9 @@ def get_trialsheetdata():
                     link = link.replace('=LIEN_HYPERTEXTE("', '')
                     link = link.split('"')[0]
 
-                    TrialSheetListe[Behemoth].append(link)
+                    LinkListe[Sheet].append(link)
 
-    return TrialSheetListe
-
-def get_metasheetdata():
-    MetaSheetListe = {}
-    for omniFR in lib.BuildsDict.trad_Omni:
-        omniEN = lib.BuildsDict.trad_Omni[omniFR]
-        MetaSheetListe[omniEN] = []
-        
-        res = lib.GSheet.getData("Meta", lib.BuildsDict.Meta_Workbook, omniEN, lib.BuildsDict.Meta_Range)
-
-        for row in res:
-            
-            for item in row:
-
-                if "=HYPERLINK" in item or "=LIEN_HYPERTEXTE" in item:
-                    link = item.replace('=HYPERLINK("', '')
-                    link = link.replace('=LIEN_HYPERTEXTE("', '')
-                    link = link.split('"')[0]
-
-                    MetaSheetListe[omniEN].append(link)
-
-    return MetaSheetListe
-
-def create_build_embed(lang, buildlist, names_json, data_json, count, type, weapon, element):
-
-    #Check que le build existe
-    build_link, build_exist = lib.Builds_Tools.get_link(buildlist, [type, weapon, element])
-    if build_link != "":
-        
-        #On change le lien si FR ou EN
-        if lang == "EN":
-            build_link = build_link.replace(".fr", ".com")
-        elif lang == "FR":
-            build_link = build_link.replace(".com", ".fr")
-
-        BuildInfos = lib.Builder_JSON.get_hash(build_link)
-
-        #On récupère les effets
-        try:
-            Effects = lib.get_Effects.getEffects(build_link, names_json, data_json, BuildInfos)
-        except: 
-            Effects = lib._("CantCalculateEffects", lang)
-
-        #On calcule la thumbnail
-        Weapon = names_json["Weapons"][str(BuildInfos[lib.Builder_Config.weapons[BuildInfos[0]]])]
-        thumbnail = "https://dauntless-builder.com/" + data_json["weapons"][Weapon]["icon"]
-
-        #On calcule la color
-        if type in lib.BuildsDict.OmniColor:
-            embedcolor = lib.BuildsDict.OmniColor[type]
-        else:
-            embedcolor = lib.BuildsDict.OmniColor['Standard']
-        
-        if lang == "FR":
-            type = reversed_trad(lib.BuildsDict.trad_Omni, type)
-            weapon = reversed_trad(lib.BuildsDict.trad_Weapon, weapon)
-            element = reversed_trad(lib.BuildsDict.trad_Element, element)
-
-        #description
-        description = lib._("SummaryRequest", lang) \
-            + "\n" + \
-            lib._("Type", lang) + f" **{type}**" \
-            + "\n" + \
-            lib._("Weapon", lang) + f" **{weapon}**" \
-            + "\n" + \
-            lib._("Element", lang) + f" **{element}**" \
-
-        #note
-        note = lib._("Notes_part1", lang) \
-            + "\n" + \
-            lib._("Notes_part2", lang)
-
-        embed=lib.discord.Embed(title=lib._("BuildTitleRequest", lang), \
-        #url=f"{build_link}", \
-        description=f"{description}", \
-        color=embedcolor)
-
-        embed.add_field(name=lib._("Link", lang), value=lib._("ClickHere", lang) + f"({build_link})", inline=False)
-        embed.add_field(name=lib._("Cells", lang), value=Effects, inline=False)
-        embed.add_field(name=lib._("Notes", lang), value=note, inline=False)
-        
-        embed.set_thumbnail(url=f"{thumbnail}")
-        embed.set_footer(text=lib._("Request", lang) + f"{count}")
-        
-        count += 1
-
-        return build_link, embed, count
-
-def create_trial_embed(lang, triallist, names_json, data_json, count, behemoth, type, trialpics):
-
-    #Check que le build existe
-    build_link, build_exist = lib.Builds_Tools.get_link(triallist, [behemoth, type])
-    if build_link != "":
-        
-        #On change le lien si FR ou EN
-        if lang == "EN":
-            build_link = build_link.replace(".fr", ".com")
-        elif lang == "FR":
-            build_link = build_link.replace(".com", ".fr")
-
-        BuildInfos = lib.Builder_JSON.get_hash(build_link)
-
-        #On récupère les effets
-        try:
-            Effects = lib.get_Effects.getEffects(build_link, names_json, data_json, BuildInfos)
-        except: 
-            Effects = lib._("CantCalculateEffects", lang)
-
-        #On calcule la thumbnail
-        Weapon = names_json["Weapons"][str(BuildInfos[lib.Builder_Config.weapons[BuildInfos[0]]])]
-        thumbnail = "https://dauntless-builder.com/" + data_json["weapons"][Weapon]["icon"]
-
-        #On calcule la color
-        if type in lib.BuildsDict.OmniColor:
-            embedcolor = lib.BuildsDict.OmniColor[type]
-        else:
-            embedcolor = lib.BuildsDict.OmniColor['Standard']
-        
-        if lang == "FR":
-            type = reversed_trad(lib.BuildsDict.trad_Weapon, type)
-
-        #description
-        description = lib._("SummaryRequest", lang) \
-            + "\n" + \
-            lib._("Weapon", lang) + f" **{type}**"
-
-        #note
-        note = lib._("Trials_Notes_part1", lang) \
-            + "\n" + \
-            lib._("Trials_Notes_part2", lang)
-
-        embed=lib.discord.Embed(title=lib._("TrialTitleRequest", lang) + behemoth, \
-        #url=f"{build_link}", \
-        description=f"{description}", \
-        color=embedcolor)
-
-        embed.add_field(name=lib._("Link", lang), value=lib._("ClickHere", lang) + f"({build_link})", inline=False)
-        embed.add_field(name=lib._("Cells", lang), value=Effects, inline=False)
-        embed.add_field(name=lib._("Notes", lang), value=note, inline=False)
-        
-        embed.set_thumbnail(url=f"{thumbnail}")
-        embed.set_footer(text=lib._("Request", lang) + f"{count}")
-
-        #Image
-        if behemoth in trialpics:
-            embed.set_image(url=trialpics[behemoth][lang])
-        
-        count += 1
-
-        return build_link, embed, count
+    return LinkListe    
 
 def reversed_trad(data, trad):
     for item in data:
@@ -206,3 +54,72 @@ def reversed_trad(data, trad):
             trad = item
             break
     return trad
+
+def create_embed(lang, book, liste, names_json, data_json, count, criterias, image=""):
+
+    #Check que le build existe
+    build_link, build_exist = lib.Builds_Tools.get_link(liste, criterias)
+    if build_link != "":
+        
+        #On change le lien si FR ou EN
+        if lang == "EN":
+            build_link = build_link.replace(".fr", ".com")
+        elif lang == "FR":
+            build_link = build_link.replace(".com", ".fr")
+
+        BuildInfos = lib.Builder_JSON.get_hash(build_link)
+
+        #On récupère les effets
+        try:
+            Effects = lib.get_Effects.getEffects(build_link, names_json, data_json, BuildInfos)
+        except: 
+            Effects = lib._(book, "CantCalculateEffects", lang)
+
+        #On calcule la thumbnail
+        Weapon = names_json["Weapons"][str(BuildInfos[lib.Builder_Config.weapons[BuildInfos[0]]])]
+        thumbnail = "https://dauntless-builder.com/" + data_json["weapons"][Weapon]["icon"]
+
+        #On calcule la color
+        if type in lib.BuildsDict.OmniColor:
+            embedcolor = lib.BuildsDict.OmniColor[type]
+        else:
+            embedcolor = lib.BuildsDict.OmniColor['Standard']
+        
+        if lang == "FR":
+            for item in criterias:
+                for category in lib.BuildsDict.trad_Builds:
+                    for trad in lib.BuildsDict.trad_Builds[category]:
+                        if item == lib.BuildsDict.trad_Builds[category][trad]:
+                            trad_item = reversed_trad(lib.BuildsDict.trad_Builds[category], item)
+                            criterias = [trad_item if item_object == item else item_object for item_object in criterias]
+
+        #description
+        description = lib._(book, "SummaryRequest", lang) \
+            + "\n"
+        for criteria in criterias:
+            description += f"- **{criteria}**\n"
+
+        #note
+        note = lib._(book, "Notes_part1", lang) \
+            + "\n" + \
+            lib._(book, "Notes_part2", lang)
+
+        embed=lib.discord.Embed(title=lib._(book, "BuildTitleRequest", lang) + f"{criterias[0]}", \
+        #url=f"{build_link}", \
+        description=f"{description}", \
+        color=embedcolor)
+
+        embed.add_field(name=lib._(book, "Link", lang), value=lib._(book, "ClickHere", lang) + f"({build_link})", inline=False)
+        embed.add_field(name=lib._(book, "Cells", lang), value=Effects, inline=False)
+        embed.add_field(name=lib._(book, "Notes", lang), value=note, inline=False)
+        
+        embed.set_thumbnail(url=f"{thumbnail}")
+
+        if image != 0:
+            embed.set_image(url=image)
+
+        embed.set_footer(text=lib._(book, "Request", lang) + f"{count}")
+        
+        count += 1
+
+        return build_link, embed, count

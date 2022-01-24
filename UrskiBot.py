@@ -25,7 +25,7 @@ startup_extensions = [
 
 @bot.event
 async def on_ready():
-    #await bot.change_presence(activity=lib.discord.Game('Finding the best builds'))
+    await bot.change_presence(activity=lib.discord.Game('Calcule les meilleurs builds ...'))
     print('------------------------')
     print('Logged in as')
     print(bot.user.name)

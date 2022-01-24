@@ -46,30 +46,30 @@ OmniColor = {
     'Catalyst' : 0xff85e3
 }
 
-trad_Omni = {
-    'Sang froid' : "Iceborne",
-    'Bastion' : "Bastion",
-    'Discipline' : "Discipline",
-    'Tempête' : "Tempest",
-    'Spectre' : "Revenant",
-    'Catalyse' : "Catalyst"
-}
-
-trad_Weapon = {
-    'Épée' : "Sword",
-    'Aéthérolance' : "War Pike",
-    'Cestes Aethériques' : "Aether Strikers",
-    'Chaînes-lames' : "Chain Blades",
-    'Hache' : "Axe",
-    'Répéteurs' : "Repeater",
-    'Marteau' : "Hammer"
-}
-
-trad_Element = {
-    'Foudroyant' : "Shock",
-    'Incandescent' : "Blaze",
-    'Obscur' : "Umbral",
-    'Tellurique' : "Terra",
-    'Givrant' : "Frost",
-    'Rayonnant' : "Radiant"
+trad_Builds = {
+    "Types" : {
+        'Sang froid' : "Iceborne",
+        'Bastion' : "Bastion",
+        'Discipline' : "Discipline",
+        'Tempête' : "Tempest",
+        'Spectre' : "Revenant",
+        'Catalyse' : "Catalyst"
+    },
+    "Weapons" : {
+        'Épée' : "Sword",
+        'Aéthérolance' : "War Pike",
+        'Cestes Aethériques' : "Aether Strikers",
+        'Chaînes-lames' : "Chain Blades",
+        'Hache' : "Axe",
+        'Répéteurs' : "Repeater",
+        'Marteau' : "Hammer"
+    },
+    "Elements" : {
+        'Foudroyant' : "Shock",
+        'Incandescent' : "Blaze",
+        'Obscur' : "Umbral",
+        'Tellurique' : "Terra",
+        'Givrant' : "Frost",
+        'Rayonnant' : "Radiant"
+    },
 }

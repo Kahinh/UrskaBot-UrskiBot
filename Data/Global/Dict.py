@@ -18,8 +18,6 @@ ListUrskiBot = [
     923531280149250128 #Dev
 ]
 
-Timer = 600
-
 #Données Test/prod
 channel_BuildAnalysis_env = {
     'Test' : 924236539511332926,

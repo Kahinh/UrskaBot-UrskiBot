@@ -38,10 +38,13 @@ Thanks for sharing and using the bot !
 There is still a lot to do, mainly to clean and optimize the bot. But I didn't plan any new major features to add into the bot, as the features already available are the ones I wanted to bring in.
 - [] Automate Reddit - Currently Reddit Feature is manual (I need to add Channels & PHXL RSS feeds manually)
 - [X] Revamp get_build_link() & get_trial_link()
-- [] Revamp create_build_embed() & create_trial_embed()
+- [X] All Trad_Items from Builds Dict into one dictionnary. In Create_Embed, improve the looping of reversed trad.
+- [X] Revamp create_build_embed() & create_trial_embed()
 - [X] Revamp get_buildsdata() & get_trialsdata()
-- [] Revamp get_metasheetdata() & get_trialsheetdata()
-- [] Bots playing a game
+- [X] Revamp get_metasheetdata() & get_trialsheetdata()
+- [X] Revamp Trads with Books
+- [X] Bots playing a game
 - [X] Better date for Reddit Posts
-- [] Solve lib.GlobalDict.Timer on Global Tools
+- [X] Solve lib.GlobalDict.Timer on Global Tools
+- [] Only one PKL
 - [] Add a /command for Esca Builds

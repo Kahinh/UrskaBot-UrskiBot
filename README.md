@@ -36,7 +36,8 @@ Thanks for sharing and using the bot !
 
 ## TodoList:
 There is still a lot to do, mainly to clean and optimize the bot. But I didn't plan any new major features to add into the bot, as the features already available are the ones I wanted to bring in.
-- [] Automate Reddit - Currently Reddit Feature is manual (I need to add Channels & PHXL RSS feeds manually)
+- [X] Automate Reddit Feeds
+- [] Automate Reddit Posting Channels
 - [X] Revamp get_build_link() & get_trial_link()
 - [X] All Trad_Items from Builds Dict into one dictionnary. In Create_Embed, improve the looping of reversed trad.
 - [X] Revamp create_build_embed() & create_trial_embed()
@@ -47,4 +48,6 @@ There is still a lot to do, mainly to clean and optimize the bot. But I didn't p
 - [X] Better date for Reddit Posts
 - [X] Solve lib.GlobalDict.Timer on Global Tools
 - [] Only one PKL
+- [] Gather Build Names from MetaSheet & TrialSheet with Links
 - [] Add a /command for Esca Builds
+- [] Pagination for multibuilds / criterias

@@ -62,7 +62,7 @@ class BuildList(lib.discord.ext.commands.Cog):
              ])
     async def _builds(self, ctx: lib.SlashContext, type, weapon, element):
 
-        build_link, embed, self.__count__ = lib.Builds_Tools.create_embed(self.__lang__, "Meta_Builds", self.__buildlist__, self.__names_json__, self.__data_json__, self.__count__, [type, weapon, element])
+        build_link, embed, self.__count__ = lib.Builds_Tools.create_embed(self.__lang__, "Meta_Builds", self.__buildlist__, self.__names_json__, self.__data_json__, self.__count__, {type: "Type", weapon: "Weapon", element: "Element"})
 
         if build_link != "":
             await lib.Tools.send_messages(ctx, embed, "embed")
@@ -257,7 +257,7 @@ class BuildList(lib.discord.ext.commands.Cog):
             else:
                 image = ""
             
-            build_link, embed, self.__count__ = lib.Builds_Tools.create_embed(self.__lang__, "Trial_Builds", self.__triallist__, self.__names_json__, self.__data_json__, self.__count__, [self.__currenttrial__, weapon], image)
+            build_link, embed, self.__count__ = lib.Builds_Tools.create_embed(self.__lang__, "Trial_Builds", self.__triallist__, self.__names_json__, self.__data_json__, self.__count__, {self.__currenttrial__: "Behemoth", weapon: "Weapon"}, image)
 
             if build_link != "":
                 await lib.Tools.send_messages(ctx, embed, "embed")

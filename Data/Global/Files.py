@@ -6,3 +6,15 @@ file_GlobalReddit = lib.os.path.abspath(lib.os.curdir) + '/gitignore/Global_Feed
 file_TrialList = lib.os.path.abspath(lib.os.curdir) + '/gitignore/TrialList.pkl'
 file_CurrentTrial = lib.os.path.abspath(lib.os.curdir) + '/gitignore/CurrentTrial.pkl'
 file_TrialPics = lib.os.path.abspath(lib.os.curdir) + '/gitignore/TrialPics.pkl'
+file_GlobalPKL = lib.os.path.abspath(lib.os.curdir) + '/gitignore/GlobalPKL.pkl'
+
+
+#GlobalPKL
+    #Reddit
+        #UrskaBot
+            #Channels
+            #OldFeeds
+        #UrskiBot
+            #Channels
+            #OldFeeds
+        #Feeds

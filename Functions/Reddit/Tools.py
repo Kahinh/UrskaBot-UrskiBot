@@ -52,11 +52,14 @@ def launch_tracker():
 
     PastFeed = {}
 
+    #On récupère la liste des FluxReddit
+    GlobalPKL = lib.Pickles.LoadPickle(lib.GlobalFiles.file_GlobalPKL, "Dict")
+
     #First step, on récupère les flux Reddit.
-    FluxReddits = get_FluxReddit(lib.RedditDict.PHXL_Feeds)
+    FluxReddits = get_FluxReddit(GlobalPKL["Reddit"]["Feeds"])
 
     #Second step, on check si c'est déjà dans le oldFeed
-    for feed in lib.RedditDict.PHXL_Feeds:
+    for feed in GlobalPKL["Reddit"]["Feeds"]:
 
         #On vérifie quand même que ce qu'on remonte est cohérent
         if FluxReddits[feed] != {}:
@@ -80,8 +83,8 @@ def launch_tracker():
 
                     #Si le media_thumbnail est vide, on essaie de foutre l'icone de l'user.
                     if media_thumbnail == "":
-                        if feed in lib.RedditDict.PHXL_Feeds:
-                            media_thumbnail = lib.RedditDict.PHXL_Feeds[feed]
+                        if feed in GlobalPKL["Reddit"]["Feeds"]:
+                            media_thumbnail = GlobalPKL["Reddit"]["Feeds"][feed]
 
                     date = lib.datetime.fromisoformat(entry.updated).strftime('%d %b %Y | %Hh%M')
 

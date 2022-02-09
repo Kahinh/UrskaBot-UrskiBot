@@ -58,7 +58,7 @@ def reversed_trad(data, trad):
 def create_embed(lang, book, liste, names_json, data_json, count, criterias, image=""):
 
     #Check que le build existe
-    build_link, build_exist = lib.Builds_Tools.get_link(liste, criterias)
+    build_link, build_exist = lib.Builds_Tools.get_link(liste, list(criterias.keys()))
     if build_link != "":
         
         #On change le lien si FR ou EN
@@ -80,31 +80,40 @@ def create_embed(lang, book, liste, names_json, data_json, count, criterias, ima
         thumbnail = "https://dauntless-builder.com/" + data_json["weapons"][Weapon]["icon"]
 
         #On calcule la color
-        if type in lib.BuildsDict.OmniColor:
-            embedcolor = lib.BuildsDict.OmniColor[type]
+        if list(criterias.keys())[0] in lib.BuildsDict.OmniColor:
+            embedcolor = lib.BuildsDict.OmniColor[list(criterias.keys())[0]]
         else:
             embedcolor = lib.BuildsDict.OmniColor['Standard']
         
+        #On trad les critères si FR
+        trad_criterias =  {}
         if lang == "FR":
             for item in criterias:
+                hit = 0
                 for category in lib.BuildsDict.trad_Builds:
                     for trad in lib.BuildsDict.trad_Builds[category]:
                         if item == lib.BuildsDict.trad_Builds[category][trad]:
                             trad_item = reversed_trad(lib.BuildsDict.trad_Builds[category], item)
-                            criterias = [trad_item if item_object == item else item_object for item_object in criterias]
+                            trad_criterias[trad_item] = criterias[item]
+                            hit = 1
+                if hit == 0:
+                    trad_criterias[item] = criterias[item]
+        else:
+            trad_criterias = criterias
+
 
         #description
         description = lib._(book, "SummaryRequest", lang) \
             + "\n"
-        for criteria in criterias:
-            description += f"- **{criteria}**\n"
+        for criteria in trad_criterias:
+            description += f"- {trad_criterias[criteria]} : **{criteria}**\n"
 
         #note
         note = lib._(book, "Notes_part1", lang) \
             + "\n" + \
             lib._(book, "Notes_part2", lang)
 
-        embed=lib.discord.Embed(title=lib._(book, "BuildTitleRequest", lang) + f"{criterias[0]}", \
+        embed=lib.discord.Embed(title=lib._(book, "BuildTitleRequest", lang) + f"{list(trad_criterias.keys())[0]}", \
         #url=f"{build_link}", \
         description=f"{description}", \
         color=embedcolor)

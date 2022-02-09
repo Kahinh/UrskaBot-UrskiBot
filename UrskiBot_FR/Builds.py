@@ -67,7 +67,7 @@ class BuildList(lib.discord.ext.commands.Cog):
         weapon = lib.BuildsDict.trad_Builds["Weapons"][arme]
         element = lib.BuildsDict.trad_Builds["Elements"][élément]
 
-        build_link, embed, self.__count__ = lib.Builds_Tools.create_embed(self.__lang__, "Meta_Builds", self.__buildlist__, self.__names_json__, self.__data_json__, self.__count__, [type, weapon, element])
+        build_link, embed, self.__count__ = lib.Builds_Tools.create_embed(self.__lang__, "Meta_Builds", self.__buildlist__, self.__names_json__, self.__data_json__, self.__count__, {type: "Type", weapon: "Arme", element: "Élément"})
 
         if build_link != "":
             await lib.Tools.send_messages(ctx, embed, "embed")
@@ -122,7 +122,7 @@ class BuildList(lib.discord.ext.commands.Cog):
                 image = ""
 
             weapon = lib.BuildsDict.trad_Builds["Weapons"][arme]
-            build_link, embed, self.__count__ = lib.Builds_Tools.create_embed(self.__lang__, "Trial_Builds", self.__triallist__, self.__names_json__, self.__data_json__, self.__count__, [self.__currenttrial__, weapon], image)
+            build_link, embed, self.__count__ = lib.Builds_Tools.create_embed(self.__lang__, "Trial_Builds", self.__triallist__, self.__names_json__, self.__data_json__, self.__count__, {self.__currenttrial__: "Behemoth", weapon: "Arme"}, image)
 
             if build_link != "":
                 await lib.Tools.send_messages(ctx, embed, "embed")

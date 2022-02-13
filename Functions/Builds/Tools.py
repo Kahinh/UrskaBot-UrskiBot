@@ -1,7 +1,11 @@
 import lib
 
-def get_link(data, criterias):
+def get_link(data, criterias, nbr=1):
+
     build_link = ""
+    name = ""
+    hit = 1
+
     for row in data:
         respected_criterias = 0
         for i in range(len(criterias)):
@@ -9,10 +13,24 @@ def get_link(data, criterias):
                 respected_criterias += 1
         
         if respected_criterias == len(criterias):
-            build_link = row[len(criterias)]
-            return build_link, True
+            if hit == nbr:
+                #On récupère les infos
+                name = row[len(criterias) + 1]
+                build_link = row[len(criterias)]
 
-    return build_link, False
+                #On compte le nombre de builds identiques.
+                simplified_list = lib.copy.deepcopy(data)
+                for simplified_row in simplified_list:
+                    simplified_row.pop()
+                    simplified_row.pop()
+                    simplified_row.pop()
+                build_nbr = simplified_list.count(criterias)
+
+                return build_link, True, name, build_nbr
+            else:
+                hit += 1
+
+    return build_link, False, name, 0
 
 def update_build_link(data, link, omnicellule, arme, élément):
     for row in data:
@@ -20,11 +38,9 @@ def update_build_link(data, link, omnicellule, arme, élément):
             row[3]= link
             return data
 
-def get_GoogleData(type, workbook, sheet, range, file):
+def get_GoogleData(type, workbook, sheet, range):
     data = lib.GSheet.getData(type, workbook, sheet, range)
-    lib.Pickles.DumpPickle(file, data)
-    datalist = lib.Pickles.LoadPickle(file)
-    return datalist
+    return data
 
 def get_sheetdata(type, workbook, range, sheetList):
 
@@ -40,11 +56,10 @@ def get_sheetdata(type, workbook, range, sheetList):
             for item in row:
 
                 if "=HYPERLINK" in item or "=LIEN_HYPERTEXTE" in item:
-                    link = item.replace('=HYPERLINK("', '')
-                    link = link.replace('=LIEN_HYPERTEXTE("', '')
-                    link = link.split('"')[0]
+                    link = item.split('"')[1]
+                    name = item.split('"')[3]
 
-                    LinkListe[Sheet].append(link)
+                    LinkListe[Sheet].append([link, name])
 
     return LinkListe    
 
@@ -55,10 +70,24 @@ def reversed_trad(data, trad):
             break
     return trad
 
-def create_embed(lang, book, liste, names_json, data_json, count, criterias, image=""):
+def get_trials_pic(currentTrial, trialPics, lang):
+    if currentTrial != "" and currentTrial != "empty":
+
+        #On récupère le lien de l'image du trial
+        if currentTrial in trialPics:
+            image = trialPics[currentTrial][lang]
+            return True, image
+        else:
+            image = ""
+            return True, image
+    
+    else:
+        return False, ""
+
+def create_embed(lang, book, liste, names_json, data_json, count, criterias, image="", nbr=1):
 
     #Check que le build existe
-    build_link, build_exist = lib.Builds_Tools.get_link(liste, list(criterias.keys()))
+    build_link, build_exist, name, build_nbr = lib.Builds_Tools.get_link(liste, list(criterias.keys()), nbr)
     if build_link != "":
         
         #On change le lien si FR ou EN
@@ -113,7 +142,8 @@ def create_embed(lang, book, liste, names_json, data_json, count, criterias, ima
             + "\n" + \
             lib._(book, "Notes_part2", lang)
 
-        embed=lib.discord.Embed(title=lib._(book, "BuildTitleRequest", lang) + f"{list(trad_criterias.keys())[0]}", \
+        #embed=lib.discord.Embed(title=lib._(book, "BuildTitleRequest", lang) + f"{list(trad_criterias.keys())[0]}", \
+        embed=lib.discord.Embed(title=lib._(book, "BuildTitleRequest", lang) + f"{name}", \
         #url=f"{build_link}", \
         description=f"{description}", \
         color=embedcolor)
@@ -131,4 +161,21 @@ def create_embed(lang, book, liste, names_json, data_json, count, criterias, ima
         
         count += 1
 
-        return build_link, embed, count
+        #Components
+        component = {}
+        buttons = []
+
+        #nbre
+        #book
+        #criterias
+
+        if nbr > 1:
+            #PreviousPage
+            buttons.append(lib.create_button(style=lib.ButtonStyle.blue, label="⪡", custom_id=f"{nbr}/{book}/{criterias}/-1"))
+        if nbr < build_nbr:
+            #NextPage
+            buttons.append(lib.create_button(style=lib.ButtonStyle.blue, label="⪢", custom_id=f"{nbr}/{book}/{criterias}/1"))
+        if buttons != []:
+            component = lib.create_actionrow(*buttons)
+
+        return build_link, embed, count, component

@@ -5,15 +5,18 @@ print("Builds : √")
 class BuildList(lib.discord.ext.commands.Cog):
     def __init__(self, bot):
         self.bot = bot
+
+        #Globals
         self.__lang__ = "EN"
-        self.__buildlist__ = lib.Pickles.LoadPickle(lib.GlobalFiles.file_BuildList)
-        self.__triallist__ = lib.Pickles.LoadPickle(lib.GlobalFiles.file_TrialList)
-        self.__currenttrial__ = lib.Pickles.LoadPickle(lib.GlobalFiles.file_CurrentTrial,"Str")
-        self.__trialpics__ = lib.Pickles.LoadPickle(lib.GlobalFiles.file_TrialPics,"Dict")
-        self.__names_json__ = lib.Builder_JSON.get_names_json("EN")
-        self.__data_json__ = lib.Builder_JSON.get_data_json("EN")
         self.__count__ = 1
         self._channelanalysis_ = lib.GlobalDict.channel_BuildAnalysis
+
+        #JSON
+        self.__names_json__ = lib.Builder_JSON.get_names_json("EN")
+        self.__data_json__ = lib.Builder_JSON.get_data_json("EN")
+
+        self.__pkl__ = lib.Pickles.LoadPickle(lib.GlobalFiles.file_GlobalPKL, "Dict")
+
 
     @lib.cog_ext.cog_slash(name="Build", description="Library of meta builds.", options=[
                 lib.create_option(
@@ -62,10 +65,10 @@ class BuildList(lib.discord.ext.commands.Cog):
              ])
     async def _builds(self, ctx: lib.SlashContext, type, weapon, element):
 
-        build_link, embed, self.__count__ = lib.Builds_Tools.create_embed(self.__lang__, "Meta_Builds", self.__buildlist__, self.__names_json__, self.__data_json__, self.__count__, {type: "Type", weapon: "Weapon", element: "Element"})
+        build_link, embed, self.__count__, component = lib.Builds_Tools.create_embed(self.__lang__, "MetaListe", self.__pkl__["Builds"]["MetaListe"], self.__names_json__, self.__data_json__, self.__count__, {type: "Type", weapon: "Weapon", element: "Element"})
 
         if build_link != "":
-            await lib.Tools.send_messages(ctx, embed, "embed")
+            await lib.Tools.send_messages(ctx, embed, "embed", lib.GlobalDict.Timer, component)
         else:
             await lib.Tools.send_messages(ctx, lib._("Global", "CantFindBuild", self.__lang__))
 
@@ -73,10 +76,7 @@ class BuildList(lib.discord.ext.commands.Cog):
     async def updatebuild(self, ctx):
         if ctx.author.id in lib.GlobalDict.ListAdmin:
             #ON LOAD GSHEET
-            self.__buildlist__ = lib.Pickles.LoadPickle(lib.GlobalFiles.file_BuildList)
-            self.__triallist__ = lib.Pickles.LoadPickle(lib.GlobalFiles.file_TrialList)
-            self.__currenttrial__ = lib.Pickles.LoadPickle(lib.GlobalFiles.file_CurrentTrial,"Str")
-            self.__trialpics__ = lib.Pickles.LoadPickle(lib.GlobalFiles.file_TrialPics,"Dict")
+            self.__pkl__ = lib.Pickles.LoadPickle(lib.GlobalFiles.file_GlobalPKL, "Dict")
 
             #ON LOAD LES JSONS
             self.__names_json__ = lib.Builder_JSON.get_names_json("EN")
@@ -98,15 +98,29 @@ class BuildList(lib.discord.ext.commands.Cog):
     async def metasheet(self, ctx):
         if ctx.author.id in lib.GlobalDict.ListAdmin:
 
+            #on met à jour si d'autres pages ont été mises à jour
+            self.__pkl__ = lib.Pickles.LoadPickle(lib.GlobalFiles.file_GlobalPKL, "Dict")
+
+            #Check l'arbre
+            if "Builds" not in self.__pkl__: self.__pkl__["Builds"] = {}
+            if "MetaListe" not in self.__pkl__["Builds"]: self.__pkl__["Builds"]["MetaListe"] = {}
+
+            #On supprime tout pour commencer
+            lib.GSheet.reset_trialdata(lib.BuildsDict.Builds_Workbook, lib.BuildsDict.Builds_Sheet, lib.BuildsDict.Builds_Range_Delete)
+            
             #First, on récup la liste des Omnis à récupérer
             SheetListe = list(lib.BuildsDict.trad_Builds["Types"].values())
             
             MetaSheetListe = lib.Builds_Tools.get_sheetdata("Meta", lib.BuildsDict.Meta_Workbook, lib.BuildsDict.Meta_Range, SheetListe)
-            AlreadyUpdated = []
+            MetaBuildListe = []
 
             for Omni in MetaSheetListe:
 
-                for lien in MetaSheetListe[Omni]:
+                for row in MetaSheetListe[Omni]:
+
+                    #Row = [link, name]
+                    lien = row[0]
+                    name = row[1]
 
                     #ON GET LES BUILDINFOS
                     BuildInfos = lib.Builder_JSON.get_hash(lien)
@@ -123,28 +137,22 @@ class BuildList(lib.discord.ext.commands.Cog):
                             Element = self.__data_json__["weapons"][Weapon]["elemental"]
                             #Type
                             Type = self.__data_json__["weapons"][Weapon]["type"]
-
-                            if [Omnicell, Type, Element] not in AlreadyUpdated:
                             
-                                current_Build, build_exist = lib.Builds_Tools.get_link(self.__buildlist__, [Omnicell, Type, Element])
-                                AlreadyUpdated.append([Omnicell, Type, Element])
-
-                                if build_exist == True:
-                                    self.__buildlist__ = lib.Builds_Tools.update_build_link(self.__buildlist__, lien, Omnicell, Type, Element)
-
-                                else:
-                                    newRow = [Omnicell, Type, Element, lien]
-                                    self.__buildlist__.append(newRow)
+                            newRow = [Omnicell, Type, Element, lien, name]
+                            MetaBuildListe.append(newRow)
 
                         else:
                             lien = lien.replace(".fr", ".com")
                             channel = self.bot.get_channel(self._channelanalysis_)
                             await channel.send(f"Meta : Anomalie identifié : \n{Omnicell}\n{lien}\n{BuildInfos}")
 
-            isDone_Meta = lib.GSheet.pushData(self.__buildlist__,lib.BuildsDict.Builds_Workbook, lib.BuildsDict.Builds_Sheet, lib.BuildsDict.Builds_start_letter, lib.BuildsDict.Builds_end_letter, lib.BuildsDict.Builds_start_row)
+            isDone_Meta = lib.GSheet.pushData(MetaBuildListe,lib.BuildsDict.Builds_Workbook, lib.BuildsDict.Builds_Sheet, lib.BuildsDict.Builds_start_letter, lib.BuildsDict.Builds_end_letter, lib.BuildsDict.Builds_start_row)
             if isDone_Meta == "Done":
+
                 #ON LOAD GSHEET
-                self.__buildlist__ = lib.Builds_Tools.get_GoogleData("Builds", lib.BuildsDict.Builds_Workbook, lib.BuildsDict.Builds_Sheet, lib.BuildsDict.Builds_Range, lib.GlobalFiles.file_BuildList)
+                self.__pkl__["Builds"]["MetaListe"] = lib.Builds_Tools.get_GoogleData("Builds", lib.BuildsDict.Builds_Workbook, lib.BuildsDict.Builds_Sheet, lib.BuildsDict.Builds_Range_Push)
+                lib.Pickles.DumpPickle(lib.GlobalFiles.file_GlobalPKL, self.__pkl__)
+                
                 await lib.Tools.send_messages(ctx, "Les données ont été chargées dans le GSheet")
                 BotDiscussion_channel = self.bot.get_channel(lib.GlobalDict.channel_BotDiscussion)
                 await lib.Tools.send_messages(BotDiscussion_channel, "//currentbuilds à ton tour UrskiBot")
@@ -155,6 +163,13 @@ class BuildList(lib.discord.ext.commands.Cog):
     async def trialsheet(self, ctx):
         if ctx.author.id in lib.GlobalDict.ListAdmin:
 
+            #on met à jour si d'autres pages ont été mises à jour
+            self.__pkl__ = lib.Pickles.LoadPickle(lib.GlobalFiles.file_GlobalPKL, "Dict")
+
+            #Check l'arbre
+            if "Builds" not in self.__pkl__: self.__pkl__["Builds"] = {}
+            if "TrialListe" not in self.__pkl__["Builds"]: self.__pkl__["Builds"]["TrialListe"] = {}
+
             #On supprime tout pour commencer
             lib.GSheet.reset_trialdata(lib.BuildsDict.Builds_Workbook, lib.BuildsDict.Trials_Sheet, lib.BuildsDict.Builds_Trials_Range_Delete)
             
@@ -163,12 +178,15 @@ class BuildList(lib.discord.ext.commands.Cog):
 
             #Puis on récupère les données
             TrialSheetListe = lib.Builds_Tools.get_sheetdata("Meta", lib.BuildsDict.Trials_Workbook, lib.BuildsDict.Trials_Range, SheetListe)
-            AlreadyUpdated = []
             TrialBuildListe = []
 
             for Behemoth in TrialSheetListe:
 
-                for lien in TrialSheetListe[Behemoth]:
+                for row in TrialSheetListe[Behemoth]:
+
+                    #Row = [link, name]
+                    lien = row[0]
+                    name = row[1]
 
                     BuildInfos = lib.Builder_JSON.get_hash(lien)
 
@@ -180,10 +198,8 @@ class BuildList(lib.discord.ext.commands.Cog):
                             Weapon = self.__names_json__["Weapons"][str(BuildInfos[lib.Builder_Config.weapons[BuildInfos[0]]])]
                             Type = self.__data_json__["weapons"][Weapon]["type"]
 
-                            if [Behemoth, Type] not in AlreadyUpdated:
-                                AlreadyUpdated.append([Behemoth, Type])
-                                newRow = [Behemoth, Type, lien]
-                                TrialBuildListe.append(newRow)
+                            newRow = [Behemoth, Type, lien, name]
+                            TrialBuildListe.append(newRow)
 
                         else:
                             channel = self.bot.get_channel(self._channelanalysis_)
@@ -191,8 +207,11 @@ class BuildList(lib.discord.ext.commands.Cog):
 
             isDone_Trial = lib.GSheet.pushData(TrialBuildListe, lib.BuildsDict.Builds_Workbook, lib.BuildsDict.Trials_Sheet, lib.BuildsDict.Builds_Trials_start_letter, lib.BuildsDict.Builds_Trials_end_letter, lib.BuildsDict.Builds_Trials_start_row)
             if isDone_Trial == "Done":
+
                 #ON LOAD GSHEET
-                self.__triallist__ = lib.Builds_Tools.get_GoogleData("Builds", lib.BuildsDict.Builds_Workbook, lib.BuildsDict.Trials_Sheet, lib.BuildsDict.Builds_Trials_Range_Push, lib.GlobalFiles.file_TrialList)
+                self.__pkl__["Builds"]["TrialListe"] = lib.Builds_Tools.get_GoogleData("Builds", lib.BuildsDict.Builds_Workbook, lib.BuildsDict.Trials_Sheet, lib.BuildsDict.Builds_Trials_Range_Push)
+                lib.Pickles.DumpPickle(lib.GlobalFiles.file_GlobalPKL, self.__pkl__)
+                
                 await lib.Tools.send_messages(ctx, "Les données ont été chargées dans le GSheet")
                 BotDiscussion_channel = self.bot.get_channel(lib.GlobalDict.channel_BotDiscussion)
                 await lib.Tools.send_messages(BotDiscussion_channel, "//currentbuilds à ton tour UrskiBot")
@@ -201,8 +220,17 @@ class BuildList(lib.discord.ext.commands.Cog):
 
     @lib.discord.ext.commands.command(name='updatetrials', pass_context=True)
     async def updatetrials(self, ctx, behemoth="empty", pic_FR="", pic_EN=""):
+
+        #on met à jour si d'autres pages ont été mises à jour
+        self.__pkl__ = lib.Pickles.LoadPickle(lib.GlobalFiles.file_GlobalPKL, "Dict")
+
+        #Check l'arbre
+        if "Trials" not in self.__pkl__: self.__pkl__["Trials"] = {}
+        if "CurrentTrials" not in self.__pkl__["Trials"]: self.__pkl__["Trials"]["CurrentTrials"] = ""
+        if "TrialPics" not in self.__pkl__["Trials"]: self.__pkl__["Trials"]["TrialPics"] = {}
+
         exist = False
-        for row in self.__triallist__:
+        for row in self.__pkl__["Builds"]["TrialListe"]:
             if behemoth == row[0]:
                 exist = True
                 break
@@ -211,21 +239,20 @@ class BuildList(lib.discord.ext.commands.Cog):
 
             if exist:
                 if pic_FR !="" or pic_EN != "":
-                    if behemoth not in self.__trialpics__:
-                        self.__trialpics__[behemoth] = {}
-                        self.__trialpics__[behemoth]["EN"] = ""
-                        self.__trialpics__[behemoth]["FR"] = ""
+                    if behemoth not in self.__pkl__["Trials"]["TrialPics"]:
+                        self.__pkl__["Trials"]["TrialPics"][behemoth] = {}
+                        self.__pkl__["Trials"]["TrialPics"][behemoth]["EN"] = ""
+                        self.__pkl__["Trials"]["TrialPics"][behemoth]["FR"] = ""
                     if pic_FR !="":
-                        self.__trialpics__[behemoth]["FR"] = pic_FR
+                        self.__pkl__["Trials"]["TrialPics"][behemoth]["FR"] = pic_FR
                     if pic_EN !="":
-                        self.__trialpics__[behemoth]["EN"] = pic_EN
-                    
-                    lib.Pickles.DumpPickle(lib.GlobalFiles.file_TrialPics, self.__trialpics__)
+                        self.__pkl__["Trials"]["TrialPics"][behemoth]["EN"] = pic_EN
 
-            self.__currenttrial__ = behemoth
-            lib.Pickles.DumpPickle(lib.GlobalFiles.file_CurrentTrial, self.__currenttrial__)
+            self.__pkl__["Trials"]["CurrentTrials"] = behemoth
 
-            await lib.Tools.send_messages(ctx, f"Update : Le current Trial est : {self.__currenttrial__}")
+            lib.Pickles.DumpPickle(lib.GlobalFiles.file_GlobalPKL, self.__pkl__)
+
+            await lib.Tools.send_messages(ctx, f"Update : Le current Trial est : {behemoth}")
             BotDiscussion_channel = self.bot.get_channel(lib.GlobalDict.channel_BotDiscussion)
             await lib.Tools.send_messages(BotDiscussion_channel, f"//currenttrials A toi UrskiBot !")
         else:
@@ -249,23 +276,141 @@ class BuildList(lib.discord.ext.commands.Cog):
                 )
              ])
     async def _trials(self, ctx: lib.SlashContext, weapon):
-        if self.__currenttrial__ != "" and self.__currenttrial__ != "empty":
 
-            #On récupère le lien de l'image du trial
-            if self.__currenttrial__ in self.__trialpics__:
-                image = self.__trialpics__[self.__currenttrial__][self.__lang__]
-            else:
-                image = ""
-            
-            build_link, embed, self.__count__ = lib.Builds_Tools.create_embed(self.__lang__, "Trial_Builds", self.__triallist__, self.__names_json__, self.__data_json__, self.__count__, {self.__currenttrial__: "Behemoth", weapon: "Weapon"}, image)
+        TrialExist, image = lib.Builds_Tools.get_trials_pic(self.__pkl__["Trials"]["CurrentTrials"], self.__pkl__["Trials"]["TrialPics"], self.__lang__)
+        if TrialExist:
+        
+            build_link, embed, self.__count__, component = lib.Builds_Tools.create_embed(self.__lang__, "TrialListe", self.__pkl__["Builds"]["TrialListe"], self.__names_json__, self.__data_json__, self.__count__, {self.__pkl__["Trials"]["CurrentTrials"]: "Behemoth", weapon: "Weapon"}, image)
 
             if build_link != "":
-                await lib.Tools.send_messages(ctx, embed, "embed")
+                await lib.Tools.send_messages(ctx, embed, "embed", lib.GlobalDict.Timer, component)
             else:
                 await lib.Tools.send_messages(ctx, lib._("Global", "CantFindBuild", self.__lang__))
         else:
             await lib.Tools.send_messages(ctx, lib._("Global", "TrialNotSetup", self.__lang__))
 
+    @lib.discord.ext.commands.Cog.listener()
+    async def on_component(self, ctx: lib.ComponentContext):
+        if ctx.bot == self.bot:
+            #ctx.custom_id = NextPage/PreviousPage
+            nbr = int(ctx.custom_id.split("/")[0])
+            book = ctx.custom_id.split("/")[1]
+            criterias = lib.ast.literal_eval(ctx.custom_id.split("/")[2])
+            int_toadd = int(ctx.custom_id.split("/")[3])
+
+            if book == "TriaListe":
+                TrialExist, image = lib.Builds_Tools.get_trials_pic(self.__pkl__["Trials"]["CurrentTrials"], self.__pkl__["Trials"]["TrialPics"], self.__lang__)
+            else:
+                image = ""
+
+            build_link, embed, self.__count__, component = lib.Builds_Tools.create_embed(self.__lang__, book, self.__pkl__["Builds"][book], self.__names_json__, self.__data_json__, self.__count__, criterias, image, nbr + int_toadd)
+
+            if component == {}:
+                await ctx.edit_origin(embed=embed, delete_after=lib.GlobalDict.Timer)
+            else:
+                await ctx.edit_origin(embed=embed, components=[component], delete_after=lib.GlobalDict.Timer)
+
+    @lib.discord.ext.commands.command(name='escasheet', pass_context=True)
+    async def escasheet(self, ctx):
+        if ctx.author.id in lib.GlobalDict.ListAdmin:
+
+            #on met à jour si d'autres pages ont été mises à jour
+            self.__pkl__ = lib.Pickles.LoadPickle(lib.GlobalFiles.file_GlobalPKL, "Dict")
+
+            #Check l'arbre
+            if "Builds" not in self.__pkl__: self.__pkl__["Builds"] = {}
+            if "EscaListe" not in self.__pkl__["Builds"]: self.__pkl__["Builds"]["EscaListe"] = {}
+
+            #On supprime tout pour commencer
+            lib.GSheet.reset_trialdata(lib.BuildsDict.Builds_Workbook, lib.BuildsDict.Escas_Sheet, lib.BuildsDict.Escas_Range_Delete)
+            
+            #First, on récup la liste des Omnis à récupérer
+            SheetListe = ["Escalations"]
+            
+            EscasSheetListe = lib.Builds_Tools.get_sheetdata("Meta", lib.BuildsDict.Meta_Workbook, lib.BuildsDict.Meta_Range, SheetListe)
+            EscaBuildListe = []
+
+            for Esca in EscasSheetListe:
+
+                for row in EscasSheetListe[Esca]:
+
+                    #Row = [link, name]
+                    lien = row[0]
+                    name = row[1]
+
+                    #ON GET LES BUILDINFOS
+                    BuildInfos = lib.Builder_JSON.get_hash(lien)
+
+                    #On check la version
+                    if BuildInfos != ():
+                        if BuildInfos[0] in lib.Builder_Config.omnicells:
+
+                            #Weapon
+                            Weapon = self.__names_json__["Weapons"][str(BuildInfos[lib.Builder_Config.weapons[BuildInfos[0]]])]
+                            #Element
+                            Element = self.__data_json__["weapons"][Weapon]["elemental"]
+                            #Type
+                            Type = self.__data_json__["weapons"][Weapon]["type"]
+                            
+                            newRow = [Type, Element, lien, name]
+                            EscaBuildListe.append(newRow)
+
+                        else:
+                            lien = lien.replace(".fr", ".com")
+                            channel = self.bot.get_channel(self._channelanalysis_)
+                            await channel.send(f"Meta : Anomalie identifié : \n{lien}\n{BuildInfos}")
+
+            isDone_Esca = lib.GSheet.pushData(EscaBuildListe,lib.BuildsDict.Builds_Workbook, lib.BuildsDict.Escas_Sheet, lib.BuildsDict.Escas_start_letter, lib.BuildsDict.Escas_end_letter, lib.BuildsDict.Escas_start_row)
+            if isDone_Esca == "Done":
+
+                #ON LOAD GSHEET
+                self.__pkl__["Builds"]["EscaListe"] = lib.Builds_Tools.get_GoogleData("Builds", lib.BuildsDict.Builds_Workbook, lib.BuildsDict.Escas_Sheet, lib.BuildsDict.Escas_Range_Push)
+                lib.Pickles.DumpPickle(lib.GlobalFiles.file_GlobalPKL, self.__pkl__)
+                
+                await lib.Tools.send_messages(ctx, "Les données ont été chargées dans le GSheet")
+                BotDiscussion_channel = self.bot.get_channel(lib.GlobalDict.channel_BotDiscussion)
+                await lib.Tools.send_messages(BotDiscussion_channel, "//currentbuilds à ton tour UrskiBot")
+            else:
+                await lib.Tools.send_messages(ctx, "Ca a merdé chef")
+
+    @lib.cog_ext.cog_slash(name="Esca", description="Library of builds for Escas.", options=[
+                lib.create_option(
+                    name="esca",
+                    description="which Escalation do you want ?",
+                    option_type=3,
+                    required=True,
+                    choices=[
+                       {'name': 'Shock', 'value': 'Shock'},
+                       {'name': 'Blaze', 'value': 'Blaze'},
+                       {'name': 'Umbral', 'value': 'Umbral'},
+                       {'name': 'Terra', 'value': 'Terra'},
+                       {'name': 'Frost', 'value': 'Frost'}
+                    ]
+                ),
+                lib.create_option(
+                  name="weapon",
+                  description="Which weapon in your build ?",
+                  option_type=3,
+                  required=True,
+                    choices=[
+                       {'name': 'Sword', 'value': 'Sword'},
+                       {'name': 'Warpike', 'value': 'War Pike'},
+                       {'name': 'Aether Strikers', 'value': 'Aether Strikers'},
+                       {'name': 'Chain Blades', 'value': 'Chain Blades'},
+                       {'name': 'Axe', 'value': 'Axe'},
+                       {'name': 'Hammer', 'value': 'Hammer'},
+                       {'name': 'Repeaters', 'value': 'Repeater'}
+                    ]
+                )
+             ])
+    async def _escas(self, ctx: lib.SlashContext, esca, weapon):
+
+        build_link, embed, self.__count__, component = lib.Builds_Tools.create_embed(self.__lang__, "EscaListe", self.__pkl__["Builds"]["EscaListe"], self.__names_json__, self.__data_json__, self.__count__, {weapon: "Weapon", esca: "Escalation"})
+        
+        if build_link != "":
+            await lib.Tools.send_messages(ctx, embed, "embed", lib.GlobalDict.Timer, component)
+        else:
+            await lib.Tools.send_messages(ctx, lib._("Global", "CantFindBuild", self.__lang__))
 
 def setup(bot):
     bot.add_cog(BuildList(bot))

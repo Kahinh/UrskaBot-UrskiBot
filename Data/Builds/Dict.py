@@ -2,9 +2,10 @@ import lib
 
 #Donnees MetaBuilds
 Builds_Workbook = "1Y6CnmLKtJZZFWkTmrmrSMUZEjowmft0PgrrkimJzYI8"
-Builds_Range = "B5:F2000"
+Builds_Range_Push = "B5:G2000"
+Builds_Range_Delete = "B5:F2000"
 Builds_start_letter = "B"
-Builds_end_letter = "E"
+Builds_end_letter = "F"
 Builds_start_row = 5
 
 #Données Test/Prod
@@ -28,12 +29,25 @@ Meta_Range = "A1:Z1000"
 #Données TrialBuilds
 Trials_Workbook = "1Kv3nlr7y5DJB_olhATqXXh-jPCkDygNCVyHkDwllTsc"
 Trials_Range = "A1:Z1000"
-Builds_Trials_Range_Push = "B5:E2000"
-Builds_Trials_Range_Delete = "B5:D2000"
+Builds_Trials_Range_Push = "B5:F2000"
+Builds_Trials_Range_Delete = "B5:E2000"
 Builds_Trials_start_letter = "B"
-Builds_Trials_end_letter = "D"
+Builds_Trials_end_letter = "E"
 Builds_Trials_start_row = 5
 
+#Données EscaBuilds
+Escas_Range_Push = "B5:F2000"
+Escas_Range_Delete = "B5:E2000"
+Escas_start_letter = "B"
+Escas_end_letter = "E"
+Escas_start_row = 5
+
+#Données Test/Prod
+Escas_Sheet_env = {
+    'Test' : "ZEscas",
+    'Prod' : "BEscas"
+}
+Escas_Sheet = Escas_Sheet_env[lib.tokens.var_TestProd]
 
 #Dico Builds
 OmniColor = {
@@ -73,3 +87,6 @@ trad_Builds = {
         'Rayonnant' : "Radiant"
     },
 }
+
+
+#Buttons

@@ -1,11 +1,6 @@
 import lib
 
-file_BuildList = lib.os.path.abspath(lib.os.curdir) + '/gitignore/BuildList.pkl'
-file_Reddit_UrskaBot = lib.os.path.abspath(lib.os.curdir) + '/gitignore/FeedRedditID_UrskaBot.pkl'
 file_GlobalReddit = lib.os.path.abspath(lib.os.curdir) + '/gitignore/Global_FeedRedditID.pkl'
-file_TrialList = lib.os.path.abspath(lib.os.curdir) + '/gitignore/TrialList.pkl'
-file_CurrentTrial = lib.os.path.abspath(lib.os.curdir) + '/gitignore/CurrentTrial.pkl'
-file_TrialPics = lib.os.path.abspath(lib.os.curdir) + '/gitignore/TrialPics.pkl'
 file_GlobalPKL = lib.os.path.abspath(lib.os.curdir) + '/gitignore/GlobalPKL.pkl'
 
 
@@ -14,7 +9,16 @@ file_GlobalPKL = lib.os.path.abspath(lib.os.curdir) + '/gitignore/GlobalPKL.pkl'
         #UrskaBot
             #Channels
             #OldFeeds
+            #ReadyToPost
         #UrskiBot
             #Channels
             #OldFeeds
+            #ReadyToPost
         #Feeds
+    #Builds
+        #TrialListe
+        #MetaListe
+        #EscaListe
+    #Trials
+        #CurrentTrials
+        #TrialPics

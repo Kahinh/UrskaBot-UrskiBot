@@ -47,7 +47,8 @@ There is still a lot to do, mainly to clean and optimize the bot. But I didn't p
 - [X] Bots playing a game
 - [X] Better date for Reddit Posts
 - [X] Solve lib.GlobalDict.Timer on Global Tools
-- [] Only one PKL
-- [] Gather Build Names from MetaSheet & TrialSheet with Links
-- [] Add a /command for Esca Builds
-- [] Pagination for multibuilds / criterias
+- [X] Only one PKL
+- [X] Gather Build Names from MetaSheet & TrialSheet with Links
+- [X] Add a /command for Esca Builds
+- [X] Pagination for multibuilds / criterias
+- [X] Safeload for RedditTracker

@@ -1,5 +1,7 @@
 import lib
 
+Timer = 600
+
 ListAdmin = [
     247756105558523904, #Kahinh
     319109133271957505, #Seven

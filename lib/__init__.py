@@ -3,15 +3,18 @@ import os
 import ssl
 import discord
 import discord.ext
+from discord_slash.utils.manage_components import create_button, create_actionrow
+from discord_slash.model import ButtonStyle
 from discord.ext import tasks
-from discord_slash import SlashCommand, cog_ext, SlashContext # Importing the newly installed library.
+from discord_slash import SlashCommand, cog_ext, SlashContext, ComponentContext # Importing the newly installed library.
 from discord_slash.utils.manage_commands import create_option, create_choice
 import pickle
 import gspread
 import urllib.request, json 
 import time
 from datetime import datetime
-
+import copy
+import ast
 
 from bs4 import BeautifulSoup
 import feedparser

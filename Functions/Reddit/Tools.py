@@ -100,14 +100,16 @@ def launch_tracker():
 
     print("Flux RSS Reddit récupérés.")
 
-async def compare_PastFeed(self, redditchannels, FeedRedditID_Bot):
+async def compare_PastFeed(self, redditchannels, GlobalPKL, Bot):
 
     channeladmin = self.bot.get_channel(lib.GlobalDict.channel_AdminReddit)
-    await lib.Tools.send_messages(channeladmin, "C'est parti", "standard", 7200)
+    if GlobalPKL["Reddit"]["UrskaBot"]["ReadyToPost"]:
+        await lib.Tools.send_messages(channeladmin, "C'est parti", "standard", 7200)
+    else:
+        await lib.Tools.send_messages(channeladmin, "C'est parti (SafeLoad)", "standard", 7200)
 
     #On récupère les PastFeed
     Global_PastFeed = lib.Pickles.LoadPickle(lib.GlobalFiles.file_GlobalReddit, "Dict")
-    Bot_PastFeed = lib.Pickles.LoadPickle(FeedRedditID_Bot, "Dict")
 
     if Global_PastFeed != {}:
 
@@ -115,22 +117,27 @@ async def compare_PastFeed(self, redditchannels, FeedRedditID_Bot):
         for feed in Global_PastFeed:
 
             #Si jamais c'est la première fois qu'on voit le bonhomme
-            if feed not in Bot_PastFeed:
-                Bot_PastFeed[feed] = []
+            if feed not in GlobalPKL["Reddit"][Bot]["OldFeeds"]:
+                GlobalPKL["Reddit"][Bot]["OldFeeds"][feed] = []
 
             #On get le content
             for id in Global_PastFeed[feed]:
 
                 #Si le message a pas encore été posté
-                if id not in Bot_PastFeed[feed]:
+                if id not in GlobalPKL["Reddit"][Bot]["OldFeeds"][feed]:
 
-                    Bot_PastFeed[feed].append(id)
-                    if len(Bot_PastFeed[feed]) > 50:
-                        Bot_PastFeed[feed].pop(0)
+                    GlobalPKL["Reddit"][Bot]["OldFeeds"][feed].append(id)
+                    if len(GlobalPKL["Reddit"][Bot]["OldFeeds"][feed]) > 50:
+                        GlobalPKL["Reddit"][Bot]["OldFeeds"][feed].pop(0)
 
                     await EmbedDiscord(self, Global_PastFeed[feed][id]["label"], Global_PastFeed[feed][id]["title"], Global_PastFeed[feed][id]["content"], Global_PastFeed[feed][id]["thumbnail"], Global_PastFeed[feed][id]["link"], Global_PastFeed[feed][id]["date"], redditchannels)
 
-    #Pour finir, on sauvegarde dans le pickle
-    lib.Pickles.DumpPickle(FeedRedditID_Bot, Bot_PastFeed)
+    if GlobalPKL["Reddit"]["UrskaBot"]["ReadyToPost"]:
+        await lib.Tools.send_messages(channeladmin, "C'est fini", "standard", 7200)
+    else:
+        await lib.Tools.send_messages(channeladmin, "C'est fini (SafeLoad)", "standard", 7200)
 
-    await lib.Tools.send_messages(channeladmin, "C'est fini", "standard", 7200)
+    GlobalPKL["Reddit"]["UrskaBot"]["ReadyToPost"] = True
+
+    #Pour finir, on sauvegarde dans le pickle
+    lib.Pickles.DumpPickle(lib.GlobalFiles.file_GlobalPKL, GlobalPKL)

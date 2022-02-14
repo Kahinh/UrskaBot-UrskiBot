@@ -171,10 +171,10 @@ def create_embed(lang, book, liste, names_json, data_json, count, criterias, ima
 
         if nbr > 1:
             #PreviousPage
-            buttons.append(lib.create_button(style=lib.ButtonStyle.blue, label="⪡", custom_id=f"{nbr}/{book}/{criterias}/-1"))
+            buttons.append(lib.create_button(style=lib.ButtonStyle.red, label="⪡", custom_id=f"{nbr}/{book}/{criterias}/-1"))
         if nbr < build_nbr:
             #NextPage
-            buttons.append(lib.create_button(style=lib.ButtonStyle.blue, label="⪢", custom_id=f"{nbr}/{book}/{criterias}/1"))
+            buttons.append(lib.create_button(style=lib.ButtonStyle.red, label="⪢", custom_id=f"{nbr}/{book}/{criterias}/1"))
         if buttons != []:
             component = lib.create_actionrow(*buttons)
 

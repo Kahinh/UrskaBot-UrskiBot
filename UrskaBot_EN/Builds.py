@@ -349,6 +349,7 @@ class BuildList(lib.discord.ext.commands.Cog):
                             Weapon = self.__names_json__["Weapons"][str(BuildInfos[lib.Builder_Config.weapons[BuildInfos[0]]])]
                             #Element
                             Element = self.__data_json__["weapons"][Weapon]["elemental"]
+                            Element = lib.BuildsDict.ElementalAdvantage[Element]
                             #Type
                             Type = self.__data_json__["weapons"][Weapon]["type"]
                             

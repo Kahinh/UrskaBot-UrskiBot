@@ -88,7 +88,7 @@ class BuildList(lib.discord.ext.commands.Cog):
     async def on_message(self, message):
         if message.content.startswith("//currentbuilds") and (message.author.id in lib.GlobalDict.ListAdmin or message.author.id in lib.GlobalDict.ListUrskaBot):
             await BuildList.updatebuilds(self)
-            await lib.Tools.send_messages(message.channel , lib._("DataLoaded", self.__lang__))
+            await lib.Tools.send_messages(message.channel , lib._("Global", "DataLoaded", self.__lang__))
         if message.content.startswith("//currenttrials") and (message.author.id in lib.GlobalDict.ListAdmin or message.author.id in lib.GlobalDict.ListUrskaBot):
             self.__pkl__ = lib.Pickles.LoadPickle(lib.GlobalFiles.file_GlobalPKL, "Dict")
             behemoth = self.__pkl__["Trials"]["CurrentTrials"]
@@ -179,10 +179,10 @@ class BuildList(lib.discord.ext.commands.Cog):
              ])
     async def _escas(self, ctx: lib.SlashContext, ascension, arme):
 
-        esca = ascension
-        weapon = arme
+        esca = lib.BuildsDict.trad_Builds["Elements"][ascension]
+        weapon = lib.BuildsDict.trad_Builds["Weapons"][arme]
 
-        build_link, embed, self.__count__, component = lib.Builds_Tools.create_embed(self.__lang__, "EscaListe", self.__pkl__["Builds"]["EscaListe"], self.__names_json__, self.__data_json__, self.__count__, {weapon: "Weapon", esca: "Escalation"})
+        build_link, embed, self.__count__, component = lib.Builds_Tools.create_embed(self.__lang__, "EscaListe", self.__pkl__["Builds"]["EscaListe"], self.__names_json__, self.__data_json__, self.__count__, {weapon: "Arme", esca: "Ascension"})
         
         if build_link != "":
             await lib.Tools.send_messages(ctx, embed, "embed", lib.GlobalDict.Timer, component)

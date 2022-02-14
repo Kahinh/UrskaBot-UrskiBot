@@ -34,7 +34,7 @@ Dictionnaire = {
         },
     "EscaListe" : {
         'Notes_part1' : "All **UrskaBot** Esca builds come from the [Official Metasheet](https://docs.google.com/spreadsheets/d/1-I4LQ_8uNqV9LuybXhz2wjmcPeTNNGWRZ-kFjsckwtk/edit#gid=531787927).",
-        'Notes_part2' : "The first build shared is a build for new player (without legendary). The other ones are optimized, even for Heroic Escalations.",
+        'Notes_part2' : "The first build shared is a build for beginners (without legendaries). The other ones are optimized, even for Heroic Escalations (for the ones with Catalyst).",
         'SummaryRequest' : "__Summary of your request :__",
         "BuildTitleRequest" : "Build Request : ",
         'CantCalculateEffects' : "I cannot calculate Cells Effects.",
@@ -83,10 +83,11 @@ Dictionnaire = {
         },
     "EscaListe" : {
         "Notes_part1" : "Tous les builds d'Ascension d'**UrskiBot** proviennent du [Metasheet Officiel](https://docs.google.com/spreadsheets/d/1-I4LQ_8uNqV9LuybXhz2wjmcPeTNNGWRZ-kFjsckwtk/edit#gid=531787927) (EN).",
-        "Notes_part2" : "Le premier build proposé est un build débutant, sans légendaire. Alors que les builds suivants sont plus optimisés, et notamment pour les Ascensions Héroïques.",
+        "Notes_part2" : "Le premier build proposé est un build débutant, sans légendaire. Alors que les builds suivants sont plus optimisés, et notamment pour les Ascensions Héroïques (pour ceux équipés de Catalyse).",
         'SummaryRequest' : "__Résumé de votre demande :__",
         'CantCalculateEffects' : "Je n'arrive pas à calculer les effets des cellules",
         "Element" : "- Elément :",
+        "Link" : "__Lien__",
         "BuildTitleRequest" : "Requête de build : ",
         "Cells" : "__Cellules__",
         "Notes" : "__Remarques__",

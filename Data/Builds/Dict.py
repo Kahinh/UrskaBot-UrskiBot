@@ -88,5 +88,14 @@ trad_Builds = {
     },
 }
 
+ElementalAdvantage = {
+        'Shock' : "Terra",
+        'Blaze' : "Frost",
+        'Umbral' : "Radiant",
+        'Radiant' : "Umbral",
+        'Frost' : "Blaze",
+        'Terra' : "Shock"
+    }
+
 
 #Buttons

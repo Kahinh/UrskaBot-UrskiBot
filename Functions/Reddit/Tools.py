@@ -48,7 +48,7 @@ async def EmbedDiscord(self, label, feedtitle, content, thumbnail, feed_url, tim
 
 def launch_tracker():
 
-    print("Initialisation de la récupération des flux RSS Reddit.")
+    #print("Initialisation de la récupération des flux RSS Reddit.")
 
     PastFeed = {}
 
@@ -98,7 +98,7 @@ def launch_tracker():
     #Pour finir, on sauvegarde dans le pickle
     lib.Pickles.DumpPickle(lib.GlobalFiles.file_GlobalReddit, PastFeed)
 
-    print("Flux RSS Reddit récupérés.")
+    #print("Flux RSS Reddit récupérés.")
 
 async def compare_PastFeed(self, redditchannels, GlobalPKL, Bot):
 

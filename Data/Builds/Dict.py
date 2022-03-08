@@ -69,7 +69,7 @@ trad_Builds = {
         'Tempête' : "Tempest",
         'Spectre' : "Revenant",
         'Catalyse' : "Catalyst",
-        'Artificer' : "Artificier"
+        'Artificier' : "Artificer"
     },
     "Weapons" : {
         'Épée' : "Sword",

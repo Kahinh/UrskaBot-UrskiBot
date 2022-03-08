@@ -8,7 +8,6 @@ class BuildList(lib.discord.ext.commands.Cog):
 
         #Globals
         self.__lang__ = "EN"
-        self.__count__ = 1
         self._channelanalysis_ = lib.GlobalDict.channel_BuildAnalysis
 
         #JSON
@@ -30,7 +29,8 @@ class BuildList(lib.discord.ext.commands.Cog):
                        {'name': 'Discipline', 'value': 'Discipline'},
                        {'name': 'Tempest', 'value': 'Tempest'},
                        {'name': 'Revenant', 'value': 'Revenant'},
-                       {'name': 'Catalyst', 'value': 'Catalyst'}
+                       {'name': 'Catalyst', 'value': 'Catalyst'},
+                       {'name': 'Artificer', 'value': 'Artificer'}
                     ]
                 ),
                 lib.create_option(
@@ -65,7 +65,7 @@ class BuildList(lib.discord.ext.commands.Cog):
              ])
     async def _builds(self, ctx: lib.SlashContext, type, weapon, element):
 
-        build_link, embed, self.__count__, component = lib.Builds_Tools.create_embed(self.__lang__, "MetaListe", self.__pkl__["Builds"]["MetaListe"], self.__names_json__, self.__data_json__, self.__count__, {type: "Type", weapon: "Weapon", element: "Element"})
+        build_link, embed, self.__pkl__["Builds"]["UrskaCount"], component = lib.Builds_Tools.create_embed(self.__lang__, "MetaListe", self.__pkl__["Builds"]["MetaListe"], self.__names_json__, self.__data_json__, self.__pkl__["Builds"]["UrskaCount"], {type: "Type", weapon: "Weapon", element: "Element"})
 
         if build_link != "":
             await lib.Tools.send_messages(ctx, embed, "embed", lib.GlobalDict.Timer, component)
@@ -280,7 +280,7 @@ class BuildList(lib.discord.ext.commands.Cog):
         TrialExist, image = lib.Builds_Tools.get_trials_pic(self.__pkl__["Trials"]["CurrentTrials"], self.__pkl__["Trials"]["TrialPics"], self.__lang__)
         if TrialExist:
         
-            build_link, embed, self.__count__, component = lib.Builds_Tools.create_embed(self.__lang__, "TrialListe", self.__pkl__["Builds"]["TrialListe"], self.__names_json__, self.__data_json__, self.__count__, {self.__pkl__["Trials"]["CurrentTrials"]: "Behemoth", weapon: "Weapon"}, image)
+            build_link, embed, self.__pkl__["Builds"]["UrskaCount"], component = lib.Builds_Tools.create_embed(self.__lang__, "TrialListe", self.__pkl__["Builds"]["TrialListe"], self.__names_json__, self.__data_json__, self.__pkl__["Builds"]["UrskaCount"], {self.__pkl__["Trials"]["CurrentTrials"]: "Behemoth", weapon: "Weapon"}, image)
 
             if build_link != "":
                 await lib.Tools.send_messages(ctx, embed, "embed", lib.GlobalDict.Timer, component)
@@ -303,7 +303,7 @@ class BuildList(lib.discord.ext.commands.Cog):
             else:
                 image = ""
 
-            build_link, embed, self.__count__, component = lib.Builds_Tools.create_embed(self.__lang__, book, self.__pkl__["Builds"][book], self.__names_json__, self.__data_json__, self.__count__, criterias, image, nbr + int_toadd)
+            build_link, embed, self.__pkl__["Builds"]["UrskaCount"], component = lib.Builds_Tools.create_embed(self.__lang__, book, self.__pkl__["Builds"][book], self.__names_json__, self.__data_json__, self.__pkl__["Builds"]["UrskaCount"], criterias, image, nbr + int_toadd)
 
             if component == {}:
                 await ctx.edit_origin(embed=embed, delete_after=lib.GlobalDict.Timer)
@@ -406,7 +406,7 @@ class BuildList(lib.discord.ext.commands.Cog):
              ])
     async def _escas(self, ctx: lib.SlashContext, esca, weapon):
 
-        build_link, embed, self.__count__, component = lib.Builds_Tools.create_embed(self.__lang__, "EscaListe", self.__pkl__["Builds"]["EscaListe"], self.__names_json__, self.__data_json__, self.__count__, {weapon: "Weapon", esca: "Escalation"})
+        build_link, embed, self.__pkl__["Builds"]["UrskaCount"], component = lib.Builds_Tools.create_embed(self.__lang__, "EscaListe", self.__pkl__["Builds"]["EscaListe"], self.__names_json__, self.__data_json__, self.__pkl__["Builds"]["UrskaCount"], {weapon: "Weapon", esca: "Escalation"})
         
         if build_link != "":
             await lib.Tools.send_messages(ctx, embed, "embed", lib.GlobalDict.Timer, component)

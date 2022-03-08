@@ -16,6 +16,8 @@ file_GlobalPKL = lib.os.path.abspath(lib.os.curdir) + '/gitignore/GlobalPKL.pkl'
             #ReadyToPost
         #Feeds
     #Builds
+        #UrskaCount
+        #UrskiCount
         #TrialListe
         #MetaListe
         #EscaListe

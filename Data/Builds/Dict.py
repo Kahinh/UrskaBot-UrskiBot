@@ -57,7 +57,8 @@ OmniColor = {
     'Discipline' : 0xF95229,
     'Tempest' : 0xFDFE71,
     'Revenant' : 0x959FF0,
-    'Catalyst' : 0xff85e3
+    'Catalyst' : 0xff85e3,
+    'Artificer' : 0xd36bff
 }
 
 trad_Builds = {
@@ -67,7 +68,8 @@ trad_Builds = {
         'Discipline' : "Discipline",
         'Tempête' : "Tempest",
         'Spectre' : "Revenant",
-        'Catalyse' : "Catalyst"
+        'Catalyse' : "Catalyst",
+        'Artificer' : "Artificier"
     },
     "Weapons" : {
         'Épée' : "Sword",

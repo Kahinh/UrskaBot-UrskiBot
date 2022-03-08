@@ -52,3 +52,7 @@ import Localisation.Trads as Trads
 
 #A check
 from asyncio import DefaultEventLoopPolicy
+
+
+#Slash-utile
+#import slash_util

@@ -8,7 +8,6 @@ class BuildList(lib.discord.ext.commands.Cog):
 
         #Globals
         self.__lang__ = "FR"
-        self.__count__ = 1
         self._channelanalysis_ = lib.GlobalDict.channel_BuildAnalysis
 
         #JSON
@@ -29,7 +28,8 @@ class BuildList(lib.discord.ext.commands.Cog):
                        {'name': 'Discipline - Expérimenté : Offensif & Dégâts Critiques', 'value': 'Discipline'},
                        {'name': 'Tempête - Intermédiaire : Célérité et Esquive', 'value': 'Tempête'},
                        {'name': 'Spectre - Expérimenté : Transfert Vie/Dégâts', 'value': 'Spectre'},
-                       {'name': 'Catalyse - Expérimenté : Offensif & Potions', 'value': 'Catalyse'}
+                       {'name': 'Catalyse - Expérimenté : Offensif & Potions', 'value': 'Catalyse'},
+                       {'name': 'Artificier - Intermédiaire : Support & Offensif/Défensif', 'value': 'Artificier'}
                     ]
                 ),
                 lib.create_option(
@@ -69,7 +69,7 @@ class BuildList(lib.discord.ext.commands.Cog):
         weapon = lib.BuildsDict.trad_Builds["Weapons"][arme]
         element = lib.BuildsDict.trad_Builds["Elements"][élément]
 
-        build_link, embed, self.__count__, component = lib.Builds_Tools.create_embed(self.__lang__, "MetaListe", self.__pkl__["Builds"]["MetaListe"], self.__names_json__, self.__data_json__, self.__count__, {type: "Type", weapon: "Arme", element: "Élément"})
+        build_link, embed, self.__pkl__["Builds"]["UrskiCount"], component = lib.Builds_Tools.create_embed(self.__lang__, "MetaListe", self.__pkl__["Builds"]["MetaListe"], self.__names_json__, self.__data_json__, self.__pkl__["Builds"]["UrskiCount"], {type: "Type", weapon: "Arme", element: "Élément"})
 
         if build_link != "":
             await lib.Tools.send_messages(ctx, embed, "embed", lib.GlobalDict.Timer, component)
@@ -117,7 +117,7 @@ class BuildList(lib.discord.ext.commands.Cog):
         if TrialExist:
 
             weapon = lib.BuildsDict.trad_Builds["Weapons"][arme]
-            build_link, embed, self.__count__, component = lib.Builds_Tools.create_embed(self.__lang__, "TrialListe", self.__pkl__["Builds"]["TrialListe"], self.__names_json__, self.__data_json__, self.__count__, {self.__pkl__["Trials"]["CurrentTrials"]: "Behemoth", weapon: "Arme"}, image)
+            build_link, embed, self.__pkl__["Builds"]["UrskiCount"], component = lib.Builds_Tools.create_embed(self.__lang__, "TrialListe", self.__pkl__["Builds"]["TrialListe"], self.__names_json__, self.__data_json__, self.__pkl__["Builds"]["UrskiCount"], {self.__pkl__["Trials"]["CurrentTrials"]: "Behemoth", weapon: "Arme"}, image)
 
             if build_link != "":
                 await lib.Tools.send_messages(ctx, embed, "embed", lib.GlobalDict.Timer, component)
@@ -140,7 +140,7 @@ class BuildList(lib.discord.ext.commands.Cog):
             else:
                 image = ""
 
-            build_link, embed, self.__count__, component = lib.Builds_Tools.create_embed(self.__lang__, book, self.__pkl__["Builds"][book], self.__names_json__, self.__data_json__, self.__count__, criterias, image, nbr + int_toadd)
+            build_link, embed, self.__pkl__["Builds"]["UrskiCount"], component = lib.Builds_Tools.create_embed(self.__lang__, book, self.__pkl__["Builds"][book], self.__names_json__, self.__data_json__, self.__pkl__["Builds"]["UrskiCount"], criterias, image, nbr + int_toadd)
 
             if component == {}:
                 await ctx.edit_origin(embed=embed, delete_after=lib.GlobalDict.Timer)
@@ -182,7 +182,7 @@ class BuildList(lib.discord.ext.commands.Cog):
         esca = lib.BuildsDict.trad_Builds["Elements"][ascension]
         weapon = lib.BuildsDict.trad_Builds["Weapons"][arme]
 
-        build_link, embed, self.__count__, component = lib.Builds_Tools.create_embed(self.__lang__, "EscaListe", self.__pkl__["Builds"]["EscaListe"], self.__names_json__, self.__data_json__, self.__count__, {weapon: "Arme", esca: "Ascension"})
+        build_link, embed, self.__pkl__["Builds"]["UrskiCount"], component = lib.Builds_Tools.create_embed(self.__lang__, "EscaListe", self.__pkl__["Builds"]["EscaListe"], self.__names_json__, self.__data_json__, self.__pkl__["Builds"]["UrskiCount"], {weapon: "Arme", esca: "Ascension"})
         
         if build_link != "":
             await lib.Tools.send_messages(ctx, embed, "embed", lib.GlobalDict.Timer, component)

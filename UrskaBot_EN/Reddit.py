@@ -40,6 +40,12 @@ class Reddit(lib.discord.ext.commands.Cog):
         if "UrskaBot" not in self.__pkl__["Reddit"]: self.__pkl__["Reddit"]["UrskaBot"] = {}
         if "ReadyToPost" not in self.__pkl__["Reddit"]["UrskaBot"]: self.__pkl__["Reddit"]["UrskaBot"]["ReadyToPost"] = ""  
 
+        #On check aussi si le counter existe tant qu'à faire
+        if "Builds" not in self.__pkl__: self.__pkl__["Builds"] = {}
+        if "UrskaCount" not in self.__pkl__["Builds"]: self.__pkl__["Builds"]["UrskaCount"] = 1
+        if "UrskiCount" not in self.__pkl__["Builds"]: self.__pkl__["Builds"]["UrskiCount"] = 1
+
+
         self.__pkl__["Reddit"]["UrskaBot"]["ReadyToPost"] = False
 
         lib.Pickles.DumpPickle(lib.GlobalFiles.file_GlobalPKL, self.__pkl__)

@@ -93,8 +93,11 @@ class BuildList(lib.discord.ext.commands.Cog):
             self.__pkl__["Builds"]["UrskiCount"] = count
             lib.Pickles.DumpPickle(lib.GlobalFiles.file_GlobalPKL, self.__pkl__)
         if message.content.startswith("//currenttrials") and (message.author.id in lib.GlobalDict.ListAdmin or message.author.id in lib.GlobalDict.ListUrskaBot):
+            count = self.__pkl__["Builds"]["UrskiCount"]
             self.__pkl__ = lib.Pickles.LoadPickle(lib.GlobalFiles.file_GlobalPKL, "Dict")
             behemoth = self.__pkl__["Trials"]["CurrentTrials"]
+            self.__pkl__["Builds"]["UrskiCount"] = count
+            lib.Pickles.DumpPickle(lib.GlobalFiles.file_GlobalPKL, self.__pkl__)
             await lib.Tools.send_messages(message.channel, f"Update : Bien reçu, le current Trial est : {behemoth}")
 
     @lib.cog_ext.cog_slash(name="Trial", description="Bibliothèque de builds optimisés pour l'épreuve en cours.", options=[

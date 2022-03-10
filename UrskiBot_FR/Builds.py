@@ -87,8 +87,11 @@ class BuildList(lib.discord.ext.commands.Cog):
     @lib.discord.ext.commands.Cog.listener()
     async def on_message(self, message):
         if message.content.startswith("//currentbuilds") and (message.author.id in lib.GlobalDict.ListAdmin or message.author.id in lib.GlobalDict.ListUrskaBot):
+            count = self.__pkl__["Builds"]["UrskiCount"]
             await BuildList.updatebuilds(self)
             await lib.Tools.send_messages(message.channel , lib._("Global", "DataLoaded", self.__lang__))
+            self.__pkl__["Builds"]["UrskiCount"] = count
+            lib.Pickles.DumpPickle(lib.GlobalFiles.file_GlobalPKL, self.__pkl__)
         if message.content.startswith("//currenttrials") and (message.author.id in lib.GlobalDict.ListAdmin or message.author.id in lib.GlobalDict.ListUrskaBot):
             self.__pkl__ = lib.Pickles.LoadPickle(lib.GlobalFiles.file_GlobalPKL, "Dict")
             behemoth = self.__pkl__["Trials"]["CurrentTrials"]

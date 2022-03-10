@@ -179,3 +179,6 @@ def create_embed(lang, book, liste, names_json, data_json, count, criterias, ima
             component = lib.create_actionrow(*buttons)
 
         return build_link, embed, count, component
+    
+    else:
+        return "", "", "", ""

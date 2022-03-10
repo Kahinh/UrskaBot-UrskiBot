@@ -69,7 +69,6 @@ class BuildList(lib.discord.ext.commands.Cog):
 
         if build_link != "":
             await lib.Tools.send_messages(ctx, embed, "embed", lib.GlobalDict.Timer, component)
-            lib.Pickles.DumpPickle(lib.GlobalFiles.file_GlobalPKL, self.__pkl__)
         else:
             await lib.Tools.send_messages(ctx, lib._("Global", "CantFindBuild", self.__lang__))
 
@@ -285,7 +284,6 @@ class BuildList(lib.discord.ext.commands.Cog):
 
             if build_link != "":
                 await lib.Tools.send_messages(ctx, embed, "embed", lib.GlobalDict.Timer, component)
-                lib.Pickles.DumpPickle(lib.GlobalFiles.file_GlobalPKL, self.__pkl__)
             else:
                 await lib.Tools.send_messages(ctx, lib._("Global", "CantFindBuild", self.__lang__))
         else:
@@ -412,7 +410,6 @@ class BuildList(lib.discord.ext.commands.Cog):
         
         if build_link != "":
             await lib.Tools.send_messages(ctx, embed, "embed", lib.GlobalDict.Timer, component)
-            lib.Pickles.DumpPickle(lib.GlobalFiles.file_GlobalPKL, self.__pkl__)
         else:
             await lib.Tools.send_messages(ctx, lib._("Global", "CantFindBuild", self.__lang__))
 

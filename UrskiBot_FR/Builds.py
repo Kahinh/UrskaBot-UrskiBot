@@ -164,7 +164,8 @@ class BuildList(lib.discord.ext.commands.Cog):
                        {'name': 'Incandescent', 'value': 'Incandescent'},
                        {'name': 'Obscur', 'value': 'Obscur'},
                        {'name': 'Tellurique', 'value': 'Tellurique'},
-                       {'name': 'Givrant', 'value': 'Givrant'}
+                       {'name': 'Givrant', 'value': 'Givrant'},
+                       {'name': 'Rayonnant', 'value': 'Rayonnant'}
                     ]
                 ),
                 lib.create_option(

@@ -385,7 +385,8 @@ class BuildList(lib.discord.ext.commands.Cog):
                        {'name': 'Blaze', 'value': 'Blaze'},
                        {'name': 'Umbral', 'value': 'Umbral'},
                        {'name': 'Terra', 'value': 'Terra'},
-                       {'name': 'Frost', 'value': 'Frost'}
+                       {'name': 'Frost', 'value': 'Frost'},
+                       {'name': 'Radiant', 'value': 'Radiant'},
                     ]
                 ),
                 lib.create_option(

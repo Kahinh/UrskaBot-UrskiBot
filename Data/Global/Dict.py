@@ -5,7 +5,8 @@ Timer = 600
 ListAdmin = [
     247756105558523904, #Kahinh
     319109133271957505, #Seven
-    593128975228993560 #Heathcliff
+    593128975228993560, #Heathcliff
+    605739639264772108 #Stolial
 ]
 
 #Identifiants
